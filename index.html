@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Toi & Moi | Tu me manques</title>
+
+    <meta
+        name="description"
+        content="Une petite déclaration d'amour, juste pour toi."
+    >
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=DM+Sans:wght@300;400;500;600&family=Great+Vibes&display=swap"
+        rel="stylesheet"
+    >
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <!-- ================= HEADER ================= -->
+
+    <header class="header" id="header">
+
+        <a href="#accueil" class="logo">
+            <span class="logo-icon">
+                <i data-lucide="heart"></i>
+            </span>
+            <span>Toi <small>&</small> Moi</span>
+        </a>
+
+        <nav class="navigation" id="navigation">
+            <a href="#accueil">Accueil</a>
+            <a href="#histoire">Notre histoire</a>
+            <a href="#compteur">Notre temps</a>
+            <a href="#lettre">Ma lettre</a>
+        </nav>
+
+        <a href="#lettre" class="header-button">
+            <i data-lucide="heart"></i>
+            <span>Pour toi</span>
+        </a>
+
+        <button class="menu-button" id="menuButton" aria-label="Ouvrir le menu">
+            <i data-lucide="menu"></i>
+        </button>
+
+    </header>
+
+
+    <main>
+
+        <!-- ================= HERO ================= -->
+
+        <section class="hero" id="accueil">
+
+            <div class="hero-image"></div>
+            <div class="hero-overlay"></div>
+
+            <div class="floating-hearts" aria-hidden="true"></div>
+
+            <div class="hero-content">
+
+                <p class="eyebrow">
+                    <span></span>
+                    MON CŒUR, MA REINE
+                    <span></span>
+                </p>
+
+                <h1>
+                    Tu me
+                    <em>manques.</em>
+                </h1>
+
+                <p class="hero-description">
+                    Chaque jour sans toi semble un peu plus long.
+                    Même quand tu es loin, tu occupes toujours
+                    une place immense dans mes pensées.
+                </p>
+
+                <div class="hero-actions">
+
+                    <button class="primary-button" id="openLetterHero">
+                        <i data-lucide="mail-open"></i>
+                        <span>Lire ma lettre</span>
+                    </button>
+
+                    <a href="#compteur" class="secondary-button">
+                        Notre histoire
+                        <i data-lucide="arrow-down"></i>
+                    </a>
+
+                </div>
+
+                <div class="hero-quote">
+                    <span class="quote-line"></span>
+
+                    <p>
+                        Même loin,<br>
+                        tu restes toujours<br>
+                        près de moi.
+                    </p>
+                </div>
+
+            </div>
+
+            <a href="#histoire" class="scroll-indicator">
+                <span>Découvrir</span>
+                <i data-lucide="chevron-down"></i>
+            </a>
+
+        </section>
+
+
+        <!-- ================= HISTOIRE ================= -->
+
+        <section class="story section" id="histoire">
+
+            <div class="story-image reveal">
+                <img
+                    src="https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?auto=format&fit=crop&w=1000&q=85"
+                    alt="Couple regardant le coucher du soleil"
+                >
+
+                <div class="image-caption">
+                    <span>Toi et moi</span>
+                    <strong>pour toujours.</strong>
+                </div>
+            </div>
+
+            <div class="story-content reveal">
+
+                <p class="section-label">NOTRE HISTOIRE</p>
+
+                <h2>
+                    Certains moments
+                    <em>deviennent éternels.</em>
+                </h2>
+
+                <p>
+                    Depuis que nos chemins se sont croisés,
+                    certaines choses ont changé. Les journées
+                    ont une autre couleur, les souvenirs ont
+                    une autre valeur et ton absence se ressent
+                    beaucoup plus que je ne voudrais l'admettre.
+                </p>
+
+                <p>
+                    Et même lorsque la distance nous sépare,
+                    une chose ne change pas : tu restes la personne
+                    à laquelle mes pensées reviennent naturellement.
+                </p>
+
+                <div class="signature">
+                    <span>Avec tout mon amour</span>
+                    <strong>Moi</strong>
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ================= COMPTEUR ================= -->
+
+        <section class="counter-section section" id="compteur">
+
+            <div class="counter-header reveal">
+
+                <p class="section-label">DEPUIS NOTRE RENCONTRE</p>
+
+                <h2>
+                    Chaque seconde
+                    <em>compte.</em>
+                </h2>
+
+                <p>
+                    Le temps passe, mais certains sentiments
+                    refusent obstinément de vieillir.
+                </p>
+
+            </div>
+
+            <div class="counter-grid reveal">
+
+                <div class="counter-card">
+                    <i data-lucide="calendar-days"></i>
+                    <strong id="days">0</strong>
+                    <span>Jours</span>
+                </div>
+
+                <div class="counter-card">
+                    <i data-lucide="clock-3"></i>
+                    <strong id="hours">0</strong>
+                    <span>Heures</span>
+                </div>
+
+                <div class="counter-card">
+                    <i data-lucide="timer"></i>
+                    <strong id="minutes">0</strong>
+                    <span>Minutes</span>
+                </div>
+
+                <div class="counter-card">
+                    <i data-lucide="heart"></i>
+                    <strong id="seconds">0</strong>
+                    <span>Secondes</span>
+                </div>
+
+            </div>
+
+            <div class="counter-message reveal">
+                <span></span>
+                <p>
+                    Et pourtant, j'ai encore l'impression
+                    que notre histoire vient de commencer.
+                </p>
+                <span></span>
+            </div>
+
+        </section>
+
+
+        <!-- ================= LETTRE ================= -->
+
+        <section class="letter-section section" id="lettre">
+
+            <div class="letter-introduction reveal">
+
+                <p class="section-label">MA LETTRE</p>
+
+                <h2>
+                    Quelques mots
+                    <em>pour toi.</em>
+                </h2>
+
+                <p>
+                    Il y a des choses que l'on ressent plus facilement
+                    qu'on ne les explique. Alors cette fois, je vais
+                    essayer de les écrire.
+                </p>
+
+            </div>
+
+            <div class="letter-wrapper reveal">
+
+                <!-- Envelope -->
+                <div class="envelope" id="envelope">
+
+                    <div class="envelope-back"></div>
+
+                    <div class="envelope-letter">
+
+                        <div class="letter-paper">
+
+                            <div class="letter-icon">
+                                <i data-lucide="heart"></i>
+                            </div>
+
+                            <h3>
+                                À toi,<br>
+                                <em>mon amour</em>
+                            </h3>
+
+                            <div class="letter-text" id="letterText">
+
+                                <p>
+                                    Tu me manques.
+                                </p>
+
+                                <p>
+                                    Tu me manques dans les petits moments,
+                                    dans les conversations que j'aimerais
+                                    avoir avec toi et dans tous ces instants
+                                    où j'aimerais simplement pouvoir te prendre
+                                    dans mes bras.
+                                </p>
+
+                                <p>
+                                    J'aimerais que tu puisses voir ce que je
+                                    ressens lorsque je pense à toi. La distance
+                                    peut séparer deux personnes, mais elle ne
+                                    sait pas séparer deux cœurs qui ont choisi
+                                    de rester proches.
+                                </p>
+
+                                <p>
+                                    Alors aujourd'hui, je voulais simplement
+                                    te rappeler une chose :
+                                </p>
+
+                                <p class="final-love">
+                                    Je t'aime.<br>
+                                    Et tu me manques énormément.
+                                </p>
+
+                            </div>
+
+                            <div class="letter-signature">
+                                Toujours à toi
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="envelope-front"></div>
+
+                </div>
+
+                <button class="letter-button" id="letterButton">
+
+                    <i data-lucide="mail-open"></i>
+
+                    <span id="letterButtonText">
+                        Ouvrir ma lettre
+                    </span>
+
+                </button>
+
+            </div>
+
+        </section>
+
+
+        <!-- ================= FINAL ================= -->
+
+        <section class="final-section">
+
+            <div class="final-decoration">
+                <i data-lucide="heart"></i>
+            </div>
+
+            <p class="section-label">POUR TOUJOURS</p>
+
+            <h2>
+                Toi.
+                <em>Encore toi.</em>
+            </h2>
+
+            <p>
+                Peu importe la distance,
+                mes pensées savent toujours
+                où te retrouver.
+            </p>
+
+            <div class="final-line"></div>
+
+            <span class="final-signature">
+                Avec amour
+            </span>
+
+        </section>
+
+    </main>
+
+
+    <!-- ================= FOOTER ================= -->
+
+    <footer>
+
+        <div class="footer-logo">
+            <i data-lucide="heart"></i>
+            <span>Toi & Moi</span>
+        </div>
+
+        <p>
+            Une petite page pour une grande place dans mon cœur.
+        </p>
+
+        <span class="footer-year">
+            <span id="year"></span>
+        </span>
+
+    </footer>
+
+
+    <script src="script.js"></script>
+
+</body>
+</html>
