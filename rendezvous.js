@@ -1,0 +1,220 @@
+/* =====================================================
+   RENDEZ-VOUS PARTAGÉS (FIRESTORE)
+===================================================== */
+
+const db = firebase.firestore();
+const rendezvousCollection = db.collection("rendezvous");
+
+const rendezvousForm =
+    document.getElementById("rendezvousForm");
+
+const rendezvousStatus =
+    document.getElementById("rendezvousStatus");
+
+const rendezvousToggle =
+    document.getElementById("rendezvousToggle");
+
+const rendezvousList =
+    document.getElementById("rendezvousList");
+
+const rendezvousEmpty =
+    document.getElementById("rendezvousEmpty");
+
+const rendezvousCount =
+    document.getElementById("rendezvousCount");
+
+
+/*
+    AFFICHAGE / MASQUAGE DE LA LISTE
+    Cliquer sur la "boîte" ouvre ou ferme
+    l'affichage des rendez-vous programmés.
+*/
+
+rendezvousToggle.addEventListener("click", () => {
+
+    rendezvousList.classList.toggle("open");
+    rendezvousToggle.classList.toggle("open");
+
+});
+
+
+/*
+    FORMATAGE D'UNE DATE EN FRANÇAIS
+*/
+
+function formatRendezvousDate(dateStr, timeStr) {
+
+    const [year, month, day] = dateStr.split("-");
+
+    const date =
+        new Date(year, month - 1, day);
+
+    const dateLabel =
+        date.toLocaleDateString("fr-FR", {
+            weekday: "long",
+            day: "numeric",
+            month: "long",
+            year: "numeric"
+        });
+
+    return `${dateLabel} à ${timeStr}`;
+
+}
+
+
+/*
+    AJOUT D'UN RENDEZ-VOUS
+*/
+
+rendezvousForm.addEventListener("submit", async (event) => {
+
+    event.preventDefault();
+
+    const date = document.getElementById("rdvDate").value;
+    const time = document.getElementById("rdvTime").value;
+    const lieu = document.getElementById("rdvLieu").value.trim();
+    const message = document.getElementById("rdvMessage").value.trim();
+
+    const submitButton =
+        document.getElementById("rdvSubmit");
+
+    submitButton.disabled = true;
+    rendezvousStatus.textContent = "Envoi en cours...";
+    rendezvousStatus.classList.remove("error");
+
+    try {
+
+        await rendezvousCollection.add({
+            date,
+            time,
+            lieu,
+            message,
+            createdAt:
+                firebase.firestore.FieldValue.serverTimestamp()
+        });
+
+        rendezvousForm.reset();
+
+        rendezvousStatus.textContent =
+            "Ta proposition a bien été envoyée !";
+
+        if (!rendezvousList.classList.contains("open")) {
+            rendezvousToggle.click();
+        }
+
+    } catch (error) {
+
+        console.error(error);
+
+        rendezvousStatus.textContent =
+            "Une erreur est survenue, réessaie.";
+
+        rendezvousStatus.classList.add("error");
+
+    } finally {
+
+        submitButton.disabled = false;
+
+        setTimeout(() => {
+            rendezvousStatus.textContent = "";
+        }, 4000);
+
+    }
+
+});
+
+
+/*
+    SUPPRESSION D'UN RENDEZ-VOUS
+*/
+
+function deleteRendezvous(id) {
+
+    rendezvousCollection.doc(id).delete();
+
+}
+
+
+/*
+    AFFICHAGE EN TEMPS RÉEL DE LA LISTE
+*/
+
+rendezvousCollection
+    .orderBy("date", "asc")
+    .orderBy("time", "asc")
+    .onSnapshot(snapshot => {
+
+        rendezvousCount.textContent = snapshot.size;
+
+        rendezvousList.innerHTML = "";
+
+        if (snapshot.empty) {
+
+            rendezvousList.appendChild(rendezvousEmpty);
+
+            return;
+
+        }
+
+        snapshot.forEach(doc => {
+
+            const rendezvous = doc.data();
+
+            const card =
+                document.createElement("div");
+
+            card.classList.add("rendezvous-card");
+
+            card.innerHTML = `
+                <div class="rendezvous-card-info">
+                    <strong>
+                        ${formatRendezvousDate(
+                            rendezvous.date,
+                            rendezvous.time
+                        )}
+                    </strong>
+                    <span>
+                        <i data-lucide="map-pin"></i>
+                        ${rendezvous.lieu}
+                    </span>
+                    ${
+                        rendezvous.message
+                            ? `<p>${rendezvous.message}</p>`
+                            : ""
+                    }
+                </div>
+
+                <button
+                    class="rendezvous-delete"
+                    aria-label="Supprimer ce rendez-vous"
+                >
+                    <i data-lucide="trash-2"></i>
+                </button>
+            `;
+
+            card
+                .querySelector(".rendezvous-delete")
+                .addEventListener(
+                    "click",
+                    () => deleteRendezvous(doc.id)
+                );
+
+            rendezvousList.appendChild(card);
+
+        });
+
+        if (window.lucide) {
+            lucide.createIcons();
+        }
+
+    }, error => {
+
+        console.error(error);
+
+        rendezvousList.innerHTML =
+            `<p class="rendezvous-empty">
+                Impossible de charger les rendez-vous
+                pour le moment.
+            </p>`;
+
+    });

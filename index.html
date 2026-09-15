@@ -44,6 +44,7 @@
             <a href="#histoire">Notre histoire</a>
             <a href="#compteur">Notre temps</a>
             <a href="#lettre">Ma lettre</a>
+            <a href="#rendezvous">Rendez-vous</a>
         </nav>
 
         <a href="#lettre" class="header-button">
@@ -333,6 +334,90 @@
         </section>
 
 
+        <!-- ================= RENDEZ-VOUS ================= -->
+
+        <section class="rendezvous-section section" id="rendezvous">
+
+            <div class="rendezvous-introduction reveal">
+
+                <p class="section-label">NOTRE PROCHAIN MOMENT</p>
+
+                <h2>
+                    Programme
+                    <em>un rendez-vous.</em>
+                </h2>
+
+                <p>
+                    Choisis un jour, une heure et un lieu qui te conviennent.
+                    Je recevrai ta proposition avec plaisir.
+                </p>
+
+            </div>
+
+            <div class="rendezvous-wrapper reveal">
+
+                <form class="rendezvous-form" id="rendezvousForm">
+
+                    <div class="form-row">
+
+                        <label>
+                            <span>Date</span>
+                            <input type="date" id="rdvDate" required>
+                        </label>
+
+                        <label>
+                            <span>Heure</span>
+                            <input type="time" id="rdvTime" required>
+                        </label>
+
+                    </div>
+
+                    <label>
+                        <span>Lieu</span>
+                        <input
+                            type="text"
+                            id="rdvLieu"
+                            placeholder="Où aimerais-tu qu'on se retrouve ?"
+                            required
+                        >
+                    </label>
+
+                    <label>
+                        <span>Petit mot (optionnel)</span>
+                        <textarea
+                            id="rdvMessage"
+                            rows="3"
+                            placeholder="Un message pour accompagner ta proposition..."
+                        ></textarea>
+                    </label>
+
+                    <button type="submit" class="primary-button" id="rdvSubmit">
+                        <i data-lucide="calendar-plus"></i>
+                        <span>Proposer ce rendez-vous</span>
+                    </button>
+
+                    <p class="rendezvous-status" id="rendezvousStatus"></p>
+
+                </form>
+
+                <button class="rendezvous-toggle" id="rendezvousToggle">
+                    <i data-lucide="calendar-heart"></i>
+                    <span>Voir les rendez-vous programmés</span>
+                    <span class="rendezvous-count" id="rendezvousCount">0</span>
+                    <i data-lucide="chevron-down" class="rendezvous-chevron"></i>
+                </button>
+
+                <div class="rendezvous-list" id="rendezvousList">
+                    <p class="rendezvous-empty" id="rendezvousEmpty">
+                        Aucun rendez-vous programmé pour l'instant.
+                    </p>
+                </div>
+
+            </div>
+
+        </section>
+
+
         <!-- ================= FINAL ================= -->
 
         <section class="final-section">
@@ -384,6 +469,13 @@
 
     </footer>
 
+
+    <!-- Firebase (stockage partagé des rendez-vous) -->
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+
+    <script src="firebase-config.js"></script>
+    <script src="rendezvous.js"></script>
 
     <script src="script.js"></script>
 
