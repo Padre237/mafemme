@@ -50,8 +50,8 @@ document.getElementById("year").textContent =
 
 const meetingDate = new Date(
     2026,
-    1,
-    15,
+    4,
+    12,
     18,
     30,
     0
