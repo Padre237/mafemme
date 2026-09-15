@@ -25,6 +25,29 @@ const galerieGrid =
 const galerieEmpty =
     document.getElementById("galerieEmpty");
 
+const galerieTypeFilter =
+    document.getElementById("galerieTypeFilter");
+
+const galerieAuthorFilter =
+    document.getElementById("galerieAuthorFilter");
+
+const galeriePeriodFilter =
+    document.getElementById("galeriePeriodFilter");
+
+const galerieLoadMore =
+    document.getElementById("galerieLoadMore");
+
+const GALERIE_PAGE_SIZE = 3;
+
+let allGalerieItems = [];
+let galerieVisibleCount = GALERIE_PAGE_SIZE;
+
+let galerieFilters = {
+    type: "all",
+    author: "all",
+    period: "all"
+};
+
 
 /*
     COMPRESSION DES PHOTOS AVANT ENVOI
@@ -219,6 +242,296 @@ function deleteGalerieItem(id) {
 
 
 /*
+    CONSTRUCTION D'UNE CARTE DE LA GALERIE
+*/
+
+function buildGalerieCard(item) {
+
+    const card =
+        document.createElement("div");
+
+    card.classList.add("galerie-card");
+
+    const isPhoto = item.type !== "video";
+
+    if (isPhoto) {
+        card.dataset.url = item.url;
+    }
+
+    const media =
+        item.type === "video"
+            ? `<video src="${item.url}" controls></video>`
+            : `<img src="${item.url}" alt="Souvenir ajouté par ${escapeHtml(item.author)}">`;
+
+    card.innerHTML = `
+        <div class="galerie-media">
+
+            ${media}
+
+            ${
+                isPhoto
+                    ? `
+                        <button
+                            class="galerie-set-hero ${
+                                (isBackgroundImage("hero", item.url) || isBackgroundImage("histoire", item.url))
+                                    ? "active"
+                                    : ""
+                            }"
+                            aria-label="Utiliser comme image de fond"
+                        >
+                            <i data-lucide="image"></i>
+                        </button>
+
+                        <div class="hero-badges">
+                            <span class="hero-current-badge" data-badge-target="hero" ${isBackgroundImage("hero", item.url) ? "" : "hidden"}>
+                                <i data-lucide="check"></i>
+                                Fond du Hero
+                            </span>
+                            <span class="hero-current-badge" data-badge-target="histoire" ${isBackgroundImage("histoire", item.url) ? "" : "hidden"}>
+                                <i data-lucide="check"></i>
+                                Notre histoire
+                            </span>
+                        </div>
+                    `
+                    : ""
+            }
+
+            <button
+                class="galerie-delete"
+                aria-label="Supprimer ce souvenir"
+            >
+                <i data-lucide="trash-2"></i>
+            </button>
+
+        </div>
+
+        <div class="galerie-card-info">
+            <strong>${escapeHtml(item.author) || "Quelqu'un"}</strong>
+            ${
+                item.caption
+                    ? `<p>${escapeHtml(item.caption)}</p>`
+                    : ""
+            }
+            ${renderEmojiBar("galerie", item.id, item.emojiReactions)}
+            ${renderCommentsSection()}
+        </div>
+    `;
+
+    card
+        .querySelector(".galerie-delete")
+        .addEventListener(
+            "click",
+            () => deleteGalerieItem(item.id)
+        );
+
+    const setHeroButton =
+        card.querySelector(".galerie-set-hero");
+
+    if (setHeroButton) {
+
+        setHeroButton.addEventListener(
+            "click",
+            () => openImageEditor(item.url)
+        );
+
+    }
+
+    bindEmojiBar(
+        card.querySelector(".emoji-bar")
+    );
+
+    bindCommentsSection(
+        card.querySelector(".comments-section"),
+        "galerie",
+        item.id
+    );
+
+    return card;
+
+}
+
+
+/*
+    FILTRES (TYPE, AUTEUR, PÉRIODE)
+*/
+
+function populateAuthorFilterOptions() {
+
+    const authors =
+        [...new Set(
+            allGalerieItems
+                .map(item => item.author)
+                .filter(Boolean)
+        )].sort((a, b) => a.localeCompare(b));
+
+    const previousValue = galerieAuthorFilter.value;
+
+    galerieAuthorFilter.innerHTML =
+        `<option value="all">Tous les auteurs</option>` +
+        authors
+            .map(author => `<option value="${escapeHtml(author)}">${escapeHtml(author)}</option>`)
+            .join("");
+
+    if (authors.includes(previousValue)) {
+        galerieAuthorFilter.value = previousValue;
+    }
+
+}
+
+function matchesPeriod(date, period) {
+
+    if (period === "all") {
+        return true;
+    }
+
+    if (!date) {
+        return false;
+    }
+
+    const now = new Date();
+
+    if (period === "today") {
+
+        return date.toDateString() === now.toDateString();
+
+    }
+
+    if (period === "week") {
+
+        const weekAgo = new Date(now);
+        weekAgo.setDate(weekAgo.getDate() - 7);
+
+        return date >= weekAgo;
+
+    }
+
+    if (period === "month") {
+
+        return (
+            date.getFullYear() === now.getFullYear() &&
+            date.getMonth() === now.getMonth()
+        );
+
+    }
+
+    if (period === "year") {
+
+        return date.getFullYear() === now.getFullYear();
+
+    }
+
+    return true;
+
+}
+
+function getFilteredGalerieItems() {
+
+    return allGalerieItems.filter(item => {
+
+        if (galerieFilters.type !== "all" && item.type !== galerieFilters.type) {
+            return false;
+        }
+
+        if (galerieFilters.author !== "all" && item.author !== galerieFilters.author) {
+            return false;
+        }
+
+        if (!matchesPeriod(item.createdAt, galerieFilters.period)) {
+            return false;
+        }
+
+        return true;
+
+    });
+
+}
+
+galerieTypeFilter.querySelectorAll(".filter-pill").forEach(pill => {
+
+    pill.addEventListener("click", () => {
+
+        galerieTypeFilter
+            .querySelectorAll(".filter-pill")
+            .forEach(p => p.classList.remove("active"));
+
+        pill.classList.add("active");
+
+        galerieFilters.type = pill.dataset.type;
+        galerieVisibleCount = GALERIE_PAGE_SIZE;
+
+        renderGalerieGrid();
+
+    });
+
+});
+
+galerieAuthorFilter.addEventListener("change", () => {
+
+    galerieFilters.author = galerieAuthorFilter.value;
+    galerieVisibleCount = GALERIE_PAGE_SIZE;
+
+    renderGalerieGrid();
+
+});
+
+galeriePeriodFilter.addEventListener("change", () => {
+
+    galerieFilters.period = galeriePeriodFilter.value;
+    galerieVisibleCount = GALERIE_PAGE_SIZE;
+
+    renderGalerieGrid();
+
+});
+
+galerieLoadMore.addEventListener("click", () => {
+
+    galerieVisibleCount += GALERIE_PAGE_SIZE;
+
+    renderGalerieGrid();
+
+});
+
+
+/*
+    AFFICHAGE DE LA GRILLE (FILTRÉE ET PAGINÉE)
+*/
+
+function renderGalerieGrid() {
+
+    galerieGrid.innerHTML = "";
+
+    const filtered = getFilteredGalerieItems();
+
+    if (filtered.length === 0) {
+
+        const empty = galerieEmpty.cloneNode(true);
+        empty.removeAttribute("id");
+        empty.hidden = false;
+
+        galerieGrid.appendChild(empty);
+
+        galerieLoadMore.hidden = true;
+
+        return;
+
+    }
+
+    filtered
+        .slice(0, galerieVisibleCount)
+        .forEach(item => {
+            galerieGrid.appendChild(buildGalerieCard(item));
+        });
+
+    galerieLoadMore.hidden = galerieVisibleCount >= filtered.length;
+
+    if (window.lucide) {
+        lucide.createIcons();
+    }
+
+}
+
+
+/*
     AFFICHAGE EN TEMPS RÉEL DE LA GRILLE
 */
 
@@ -226,9 +539,7 @@ galerieCollection
     .orderBy("createdAt", "desc")
     .onSnapshot(snapshot => {
 
-        galerieGrid.innerHTML = "";
-
-        const items =
+        allGalerieItems =
             snapshot.docs.map(doc => ({
                 id: doc.id,
                 ...doc.data(),
@@ -238,124 +549,10 @@ galerieCollection
                         : null
             }));
 
-        checkForNewContent(items, "galerie", "galerie");
+        checkForNewContent(allGalerieItems, "galerie", "galerie");
 
-        if (snapshot.empty) {
-
-            galerieGrid.appendChild(galerieEmpty);
-
-            return;
-
-        }
-
-        items.forEach(item => {
-
-            const card =
-                document.createElement("div");
-
-            card.classList.add("galerie-card");
-
-            const isPhoto = item.type !== "video";
-
-            if (isPhoto) {
-                card.dataset.url = item.url;
-            }
-
-            const media =
-                item.type === "video"
-                    ? `<video src="${item.url}" controls></video>`
-                    : `<img src="${item.url}" alt="Souvenir ajouté par ${escapeHtml(item.author)}">`;
-
-            card.innerHTML = `
-                <div class="galerie-media">
-
-                    ${media}
-
-                    ${
-                        isPhoto
-                            ? `
-                                <button
-                                    class="galerie-set-hero ${
-                                        (isBackgroundImage("hero", item.url) || isBackgroundImage("histoire", item.url))
-                                            ? "active"
-                                            : ""
-                                    }"
-                                    aria-label="Utiliser comme image de fond"
-                                >
-                                    <i data-lucide="image"></i>
-                                </button>
-
-                                <div class="hero-badges">
-                                    <span class="hero-current-badge" data-badge-target="hero" ${isBackgroundImage("hero", item.url) ? "" : "hidden"}>
-                                        <i data-lucide="check"></i>
-                                        Fond du Hero
-                                    </span>
-                                    <span class="hero-current-badge" data-badge-target="histoire" ${isBackgroundImage("histoire", item.url) ? "" : "hidden"}>
-                                        <i data-lucide="check"></i>
-                                        Notre histoire
-                                    </span>
-                                </div>
-                            `
-                            : ""
-                    }
-
-                    <button
-                        class="galerie-delete"
-                        aria-label="Supprimer ce souvenir"
-                    >
-                        <i data-lucide="trash-2"></i>
-                    </button>
-
-                </div>
-
-                <div class="galerie-card-info">
-                    <strong>${escapeHtml(item.author) || "Quelqu'un"}</strong>
-                    ${
-                        item.caption
-                            ? `<p>${escapeHtml(item.caption)}</p>`
-                            : ""
-                    }
-                    ${renderEmojiBar("galerie", item.id, item.emojiReactions)}
-                    ${renderCommentsSection()}
-                </div>
-            `;
-
-            card
-                .querySelector(".galerie-delete")
-                .addEventListener(
-                    "click",
-                    () => deleteGalerieItem(item.id)
-                );
-
-            const setHeroButton =
-                card.querySelector(".galerie-set-hero");
-
-            if (setHeroButton) {
-
-                setHeroButton.addEventListener(
-                    "click",
-                    () => openImageEditor(item.url)
-                );
-
-            }
-
-            bindEmojiBar(
-                card.querySelector(".emoji-bar")
-            );
-
-            bindCommentsSection(
-                card.querySelector(".comments-section"),
-                "galerie",
-                item.id
-            );
-
-            galerieGrid.appendChild(card);
-
-        });
-
-        if (window.lucide) {
-            lucide.createIcons();
-        }
+        populateAuthorFilterOptions();
+        renderGalerieGrid();
 
     }, error => {
 

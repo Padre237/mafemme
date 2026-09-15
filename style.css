@@ -300,11 +300,13 @@ img {
 
 .hero-image img {
     position: absolute;
-    top: 50%;
-    left: 50%;
+    top: 0;
+    left: 0;
 
-    max-width: none;
+    width: 100%;
+    height: 100%;
 
+    object-fit: cover;
     transform-origin: center center;
 }
 
@@ -510,11 +512,13 @@ img {
 
 .story-image img {
     position: absolute;
-    top: 50%;
-    left: 50%;
+    top: 0;
+    left: 0;
 
-    max-width: none;
+    width: 100%;
+    height: 100%;
 
+    object-fit: cover;
     transform-origin: center center;
 }
 
@@ -1724,9 +1728,35 @@ body.modal-open {
     color: #b3261e;
 }
 
+.galerie-filters {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+
+    margin-bottom: 22px;
+}
+
+.galerie-filter-select {
+    padding: 8px 14px;
+
+    color: var(--text-light);
+    background: var(--cream);
+    border: none;
+
+    border-radius: 100px;
+
+    font-family: var(--sans);
+    font-size: 13px;
+    font-weight: 500;
+
+    cursor: pointer;
+}
+
 .galerie-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    align-items: start;
     gap: 18px;
 }
 
@@ -1760,11 +1790,44 @@ body.modal-open {
 
 .galerie-card img,
 .galerie-card video {
+    display: block;
+
     width: 100%;
-    aspect-ratio: 1;
-    object-fit: cover;
+    height: auto;
 
     background: var(--black);
+}
+
+.galerie-load-more {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+
+    width: fit-content;
+    margin: 32px auto 0;
+    padding: 13px 28px;
+
+    color: white;
+    background: var(--burgundy-light);
+
+    border-radius: 100px;
+
+    font-size: 14px;
+    font-weight: 500;
+
+    box-shadow: 0 12px 25px rgba(158,48,75,.25);
+
+    transition: var(--transition);
+}
+
+.galerie-load-more:hover {
+    background: var(--burgundy);
+    transform: translateY(-2px);
+}
+
+.galerie-load-more svg {
+    width: 16px;
 }
 
 .galerie-card-info {
@@ -2642,9 +2705,6 @@ body.modal-open {
 
     background: var(--black);
     border-radius: 8px;
-
-    touch-action: none;
-    cursor: grab;
 }
 
 .editor-frame.ratio-histoire {
@@ -2654,17 +2714,15 @@ body.modal-open {
     margin: 0 auto;
 }
 
-.editor-frame:active {
-    cursor: grabbing;
-}
-
 .editor-frame img {
     position: absolute;
-    top: 50%;
-    left: 50%;
+    top: 0;
+    left: 0;
 
-    max-width: none;
+    width: 100%;
+    height: 100%;
 
+    object-fit: cover;
     transform-origin: center center;
 
     user-select: none;
@@ -3151,7 +3209,7 @@ footer p {
         padding: 130px 8%;
     }
 
-    .story-image img {
+    .story-image {
         aspect-ratio: .9;
     }
 

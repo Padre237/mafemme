@@ -47,7 +47,12 @@ const currentBackgrounds = {
 /*
     APPLIQUE UNE IMAGE (+ ROTATION ÉVENTUELLE) EN MODE
     "COVER" AUTOMATIQUE — utilisé pour les vraies sections
-    ET l'aperçu de l'éditeur
+    ET l'aperçu de l'éditeur.
+
+    Sans rotation, on s'appuie sur object-fit:cover du
+    navigateur (fiable, toujours responsive). Avec une
+    rotation, on dimensionne l'image sur les proportions
+    inversées du cadre puis on la pivote.
 */
 
 function applyCrop(imgEl, containerEl, crop) {
@@ -60,29 +65,36 @@ function applyCrop(imgEl, containerEl, crop) {
 
     const render = () => {
 
+        if (rotation === 0) {
+
+            imgEl.style.top = "0";
+            imgEl.style.left = "0";
+            imgEl.style.width = "100%";
+            imgEl.style.height = "100%";
+            imgEl.style.transform = "none";
+
+            return;
+
+        }
+
         const containerWidth = containerEl.clientWidth;
         const containerHeight = containerEl.clientHeight;
 
-        const rotated = (rotation % 180) !== 0;
-
-        const naturalWidth =
-            rotated ? imgEl.naturalHeight : imgEl.naturalWidth;
-
-        const naturalHeight =
-            rotated ? imgEl.naturalWidth : imgEl.naturalHeight;
-
-        if (!naturalWidth || !naturalHeight || !containerWidth || !containerHeight) {
+        if (!containerWidth || !containerHeight) {
             return;
         }
 
-        const scale =
-            Math.max(
-                containerWidth / naturalWidth,
-                containerHeight / naturalHeight
-            );
+        const rotated = (rotation % 180) !== 0;
 
+        const targetWidth = rotated ? containerHeight : containerWidth;
+        const targetHeight = rotated ? containerWidth : containerHeight;
+
+        imgEl.style.top = "50%";
+        imgEl.style.left = "50%";
+        imgEl.style.width = `${targetWidth}px`;
+        imgEl.style.height = `${targetHeight}px`;
         imgEl.style.transform =
-            `translate(-50%, -50%) rotate(${rotation}deg) scale(${scale})`;
+            `translate(-50%, -50%) rotate(${rotation}deg)`;
 
     };
 

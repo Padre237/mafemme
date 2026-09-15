@@ -545,11 +545,38 @@
 
                 </div>
 
+                <div class="galerie-filters">
+
+                    <div class="filter-pills" id="galerieTypeFilter">
+                        <button type="button" class="filter-pill active" data-type="all">Tout</button>
+                        <button type="button" class="filter-pill" data-type="photo">Photos</button>
+                        <button type="button" class="filter-pill" data-type="video">Vidéos</button>
+                    </div>
+
+                    <select class="galerie-filter-select" id="galerieAuthorFilter">
+                        <option value="all">Tous les auteurs</option>
+                    </select>
+
+                    <select class="galerie-filter-select" id="galeriePeriodFilter">
+                        <option value="all">Toute période</option>
+                        <option value="today">Aujourd'hui</option>
+                        <option value="week">Cette semaine</option>
+                        <option value="month">Ce mois-ci</option>
+                        <option value="year">Cette année</option>
+                    </select>
+
+                </div>
+
                 <div class="galerie-grid" id="galerieGrid">
                     <p class="galerie-empty" id="galerieEmpty">
                         Aucun souvenir ajouté pour l'instant.
                     </p>
                 </div>
+
+                <button type="button" class="galerie-load-more" id="galerieLoadMore" hidden>
+                    <span>Voir plus de souvenirs</span>
+                    <i data-lucide="chevron-down"></i>
+                </button>
 
             </div>
 
