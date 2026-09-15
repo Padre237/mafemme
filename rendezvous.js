@@ -134,7 +134,7 @@ rendezvousForm.addEventListener("submit", async (event) => {
         console.error(error);
 
         rendezvousStatus.textContent =
-            getSubmitErrorMessage();
+            "Une erreur est survenue, réessaie.";
 
         rendezvousStatus.classList.add("error");
 

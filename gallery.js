@@ -186,7 +186,7 @@ galerieForm.addEventListener("submit", async (event) => {
         console.error(error);
 
         galerieStatus.textContent =
-            getSubmitErrorMessage();
+            "Une erreur est survenue, réessaie.";
 
         galerieStatus.classList.add("error");
 

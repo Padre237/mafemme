@@ -59,7 +59,7 @@ messageForm.addEventListener("submit", async (event) => {
         console.error(error);
 
         messageStatus.textContent =
-            getSubmitErrorMessage();
+            "Une erreur est survenue, réessaie.";
 
         messageStatus.classList.add("error");
 
