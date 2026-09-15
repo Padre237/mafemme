@@ -13,5 +13,5 @@
    4. Remplace les deux valeurs ci-dessous.
 ===================================================== */
 
-const CLOUDINARY_CLOUD_NAME = "REMPLACE_MOI";
-const CLOUDINARY_UPLOAD_PRESET = "REMPLACE_MOI";
+const CLOUDINARY_CLOUD_NAME = "pvfhirsk";
+const CLOUDINARY_UPLOAD_PRESET = "armelle";
