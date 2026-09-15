@@ -11,6 +11,14 @@
         content="Une petite déclaration d'amour, juste pour toi, Armelle Jessica."
     >
 
+    <meta name="theme-color" content="#671525">
+
+    <link
+        rel="icon"
+        type="image/svg+xml"
+        href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23671525'%3E%3Cpath d='M12 21.23 3.28 12.51a5.5 5.5 0 0 1 7.78-7.78L12 5.67l.94-.94a5.5 5.5 0 0 1 7.78 7.78z'/%3E%3C/svg%3E"
+    >
+
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -357,6 +365,40 @@
             </div>
 
             <div class="rendezvous-wrapper reveal">
+
+                <div class="rendezvous-countdown" id="rendezvousCountdown" hidden>
+
+                    <p class="rendezvous-countdown-label">
+                        Prochain rendez-vous confirmé
+                    </p>
+
+                    <div class="rendezvous-countdown-grid">
+
+                        <div>
+                            <strong id="rdvCountDays">0</strong>
+                            <span>Jours</span>
+                        </div>
+
+                        <div>
+                            <strong id="rdvCountHours">00</strong>
+                            <span>Heures</span>
+                        </div>
+
+                        <div>
+                            <strong id="rdvCountMinutes">00</strong>
+                            <span>Min</span>
+                        </div>
+
+                        <div>
+                            <strong id="rdvCountSeconds">00</strong>
+                            <span>Sec</span>
+                        </div>
+
+                    </div>
+
+                    <p class="rendezvous-countdown-place" id="rdvCountPlace"></p>
+
+                </div>
 
                 <div class="section-actions">
 

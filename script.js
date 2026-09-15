@@ -6,6 +6,21 @@ lucide.createIcons();
 
 
 /* =====================================================
+   FONDU AU CHARGEMENT
+===================================================== */
+
+function revealPage() {
+    document.body.classList.add("page-loaded");
+}
+
+if (document.readyState === "complete") {
+    revealPage();
+} else {
+    window.addEventListener("load", revealPage);
+}
+
+
+/* =====================================================
    ANNÉE
 ===================================================== */
 
@@ -641,3 +656,151 @@ const signatureObserver =
     );
 
 signatureObserver.observe(finalSignature);
+
+
+/* =====================================================
+   EASTER EGG : PLUIE DE CŒURS SUR LE LOGO
+
+   5 clics rapides sur le petit cœur du logo déclenchent
+   une pluie de cœurs plein écran et un message caché.
+===================================================== */
+
+const logoIcon =
+    document.querySelector(".logo-icon");
+
+const easterEggMessages = [
+    "Je t'aime, Armelle.",
+    "Tu es la plus belle chose qui me soit arrivée.",
+    "Pour toujours, avec toi.",
+    "Mon cœur est à toi."
+];
+
+function showEasterEggMessage() {
+
+    const message =
+        document.createElement("div");
+
+    message.classList.add("easter-egg-message");
+
+    message.textContent =
+        easterEggMessages[
+            Math.floor(Math.random() * easterEggMessages.length)
+        ];
+
+    document.body.appendChild(message);
+
+    requestAnimationFrame(() => {
+        message.classList.add("visible");
+    });
+
+    setTimeout(() => {
+
+        message.classList.remove("visible");
+
+        setTimeout(() => message.remove(), 600);
+
+    }, 2600);
+
+}
+
+function triggerHeartRain() {
+
+    const container =
+        document.createElement("div");
+
+    container.classList.add("heart-rain");
+
+    document.body.appendChild(container);
+
+    const heartCount = 34;
+
+    for (let i = 0; i < heartCount; i++) {
+
+        setTimeout(() => {
+
+            const heart =
+                document.createElement("div");
+
+            heart.classList.add("heart-rain-item");
+
+            heart.innerHTML = `
+                <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.3"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                >
+                    <path d="
+                        M20.84 4.61
+                        a5.5 5.5 0 0 0-7.78 0
+                        L12 5.67
+                        l-1.06-1.06
+                        a5.5 5.5 0 0 0-7.78 7.78
+                        l1.06 1.06
+                        L12 21.23
+                        l7.78-7.78
+                        1.06-1.06
+                        a5.5 5.5 0 0 0 0-7.78z
+                    "/>
+                </svg>
+            `;
+
+            const left = Math.random() * 100;
+            const duration = 3 + Math.random() * 2.5;
+            const size = 14 + Math.random() * 16;
+            const drift = (Math.random() * 120) - 60;
+
+            heart.style.left = `${left}%`;
+            heart.style.width = `${size}px`;
+            heart.style.height = `${size}px`;
+            heart.style.animationDuration = `${duration}s`;
+
+            heart.style.setProperty("--drift", `${drift}px`);
+
+            container.appendChild(heart);
+
+            setTimeout(() => heart.remove(), duration * 1000);
+
+        }, i * 60);
+
+    }
+
+    setTimeout(
+        () => container.remove(),
+        heartCount * 60 + 4000
+    );
+
+    showEasterEggMessage();
+
+}
+
+if (logoIcon) {
+
+    let logoClickCount = 0;
+    let logoClickTimer = null;
+
+    logoIcon.addEventListener("click", (event) => {
+
+        event.preventDefault();
+
+        logoClickCount++;
+
+        clearTimeout(logoClickTimer);
+
+        logoClickTimer = setTimeout(() => {
+            logoClickCount = 0;
+        }, 1500);
+
+        if (logoClickCount >= 5) {
+
+            logoClickCount = 0;
+
+            triggerHeartRain();
+
+        }
+
+    });
+
+}

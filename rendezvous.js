@@ -23,6 +23,24 @@ const rendezvousEmpty =
 const rendezvousCount =
     document.getElementById("rendezvousCount");
 
+const rendezvousCountdown =
+    document.getElementById("rendezvousCountdown");
+
+const rdvCountDays =
+    document.getElementById("rdvCountDays");
+
+const rdvCountHours =
+    document.getElementById("rdvCountHours");
+
+const rdvCountMinutes =
+    document.getElementById("rdvCountMinutes");
+
+const rdvCountSeconds =
+    document.getElementById("rdvCountSeconds");
+
+const rdvCountPlace =
+    document.getElementById("rdvCountPlace");
+
 
 /*
     AFFICHAGE / MASQUAGE DE LA LISTE
@@ -92,6 +110,7 @@ rendezvousForm.addEventListener("submit", async (event) => {
             datetime: `${date}T${time}`,
             lieu,
             message,
+            confirmed: false,
             createdAt:
                 firebase.firestore.FieldValue.serverTimestamp()
         });
@@ -144,6 +163,93 @@ function deleteRendezvous(id) {
 
 
 /*
+    CONFIRMATION D'UN RENDEZ-VOUS
+*/
+
+function toggleConfirmRendezvous(id, confirmed) {
+
+    rendezvousCollection.doc(id).update({
+        confirmed: !confirmed
+    });
+
+}
+
+
+/*
+    COMPTE À REBOURS DU PROCHAIN RENDEZ-VOUS CONFIRMÉ
+*/
+
+let upcomingRendezvous = null;
+let countdownInterval = null;
+
+function findUpcomingConfirmed(rendezvousList) {
+
+    const now = new Date();
+
+    const upcoming = rendezvousList
+        .filter(item =>
+            item.confirmed &&
+            new Date(`${item.date}T${item.time}`) > now
+        )
+        .sort((a, b) =>
+            new Date(`${a.date}T${a.time}`) -
+            new Date(`${b.date}T${b.time}`)
+        );
+
+    return upcoming[0] || null;
+
+}
+
+function updateCountdownDisplay() {
+
+    if (!upcomingRendezvous) {
+
+        rendezvousCountdown.hidden = true;
+
+        return;
+
+    }
+
+    const target =
+        new Date(
+            `${upcomingRendezvous.date}T${upcomingRendezvous.time}`
+        );
+
+    const diff = target - new Date();
+
+    if (diff <= 0) {
+
+        rendezvousCountdown.hidden = true;
+
+        return;
+
+    }
+
+    rendezvousCountdown.hidden = false;
+
+    const totalSeconds = Math.floor(diff / 1000);
+
+    const days = Math.floor(totalSeconds / 86400);
+    const hours = Math.floor((totalSeconds % 86400) / 3600);
+    const minutes = Math.floor((totalSeconds % 3600) / 60);
+    const seconds = totalSeconds % 60;
+
+    rdvCountDays.textContent = days;
+    rdvCountHours.textContent = String(hours).padStart(2, "0");
+    rdvCountMinutes.textContent = String(minutes).padStart(2, "0");
+    rdvCountSeconds.textContent = String(seconds).padStart(2, "0");
+
+    rdvCountPlace.textContent =
+        upcomingRendezvous.lieu
+            ? `À ${upcomingRendezvous.lieu}`
+            : "";
+
+}
+
+countdownInterval = setInterval(updateCountdownDisplay, 1000);
+
+
+/*
     AFFICHAGE EN TEMPS RÉEL DE LA LISTE
 */
 
@@ -155,6 +261,17 @@ rendezvousCollection
 
         rendezvousList.innerHTML = "";
 
+        const allRendezvous =
+            snapshot.docs.map(doc => ({
+                id: doc.id,
+                ...doc.data()
+            }));
+
+        upcomingRendezvous =
+            findUpcomingConfirmed(allRendezvous);
+
+        updateCountdownDisplay();
+
         if (snapshot.empty) {
 
             rendezvousList.appendChild(rendezvousEmpty);
@@ -163,23 +280,34 @@ rendezvousCollection
 
         }
 
-        snapshot.forEach(doc => {
-
-            const rendezvous = doc.data();
+        allRendezvous.forEach(rendezvous => {
 
             const card =
                 document.createElement("div");
 
             card.classList.add("rendezvous-card");
 
+            if (rendezvous.confirmed) {
+                card.classList.add("confirmed");
+            }
+
             card.innerHTML = `
                 <div class="rendezvous-card-info">
-                    <strong>
-                        ${formatRendezvousDate(
-                            rendezvous.date,
-                            rendezvous.time
-                        )}
-                    </strong>
+                    <div class="rendezvous-card-top">
+                        <strong>
+                            ${formatRendezvousDate(
+                                rendezvous.date,
+                                rendezvous.time
+                            )}
+                        </strong>
+                        <span class="rendezvous-badge">
+                            ${
+                                rendezvous.confirmed
+                                    ? "Confirmé 💕"
+                                    : "Proposé"
+                            }
+                        </span>
+                    </div>
                     <span>
                         <i data-lucide="map-pin"></i>
                         ${escapeHtml(rendezvous.lieu)}
@@ -192,6 +320,13 @@ rendezvousCollection
                     <em class="rendezvous-author">
                         Proposé par ${escapeHtml(rendezvous.author) || "quelqu'un"}
                     </em>
+                    <button class="rendezvous-confirm ${rendezvous.confirmed ? "is-confirmed" : ""}">
+                        ${
+                            rendezvous.confirmed
+                                ? "Annuler la confirmation"
+                                : "Je confirme 💕"
+                        }
+                    </button>
                 </div>
 
                 <button
@@ -206,7 +341,17 @@ rendezvousCollection
                 .querySelector(".rendezvous-delete")
                 .addEventListener(
                     "click",
-                    () => deleteRendezvous(doc.id)
+                    () => deleteRendezvous(rendezvous.id)
+                );
+
+            card
+                .querySelector(".rendezvous-confirm")
+                .addEventListener(
+                    "click",
+                    () => toggleConfirmRendezvous(
+                        rendezvous.id,
+                        rendezvous.confirmed
+                    )
                 );
 
             rendezvousList.appendChild(card);
