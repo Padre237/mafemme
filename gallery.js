@@ -1,8 +1,11 @@
 /* =====================================================
-   GALERIE PARTAGÉE (FIRESTORE + STORAGE)
+   GALERIE PARTAGÉE (FIRESTORE + CLOUDINARY)
+
+   Les fichiers sont envoyés à Cloudinary (stockage
+   gratuit de photos/vidéos) et seule l'URL renvoyée
+   est enregistrée dans Firestore.
 ===================================================== */
 
-const storage = firebase.storage();
 const galerieCollection = db.collection("galerie");
 
 const MAX_FILE_SIZE = 20 * 1024 * 1024; // 20 Mo
@@ -21,6 +24,34 @@ const galerieGrid =
 
 const galerieEmpty =
     document.getElementById("galerieEmpty");
+
+
+/*
+    ENVOI DU FICHIER VERS CLOUDINARY
+*/
+
+async function uploadToCloudinary(file) {
+
+    const formData = new FormData();
+
+    formData.append("file", file);
+    formData.append("upload_preset", CLOUDINARY_UPLOAD_PRESET);
+
+    const response = await fetch(
+        `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/auto/upload`,
+        {
+            method: "POST",
+            body: formData
+        }
+    );
+
+    if (!response.ok) {
+        throw new Error("Échec de l'envoi à Cloudinary");
+    }
+
+    return response.json();
+
+}
 
 
 /*
@@ -59,18 +90,10 @@ galerieForm.addEventListener("submit", async (event) => {
         const type =
             file.type.startsWith("video") ? "video" : "photo";
 
-        const storagePath =
-            `galerie/${Date.now()}_${file.name}`;
-
-        const fileRef = storage.ref(storagePath);
-
-        await fileRef.put(file);
-
-        const url = await fileRef.getDownloadURL();
+        const uploadResult = await uploadToCloudinary(file);
 
         await galerieCollection.add({
-            url,
-            storagePath,
+            url: uploadResult.secure_url,
             type,
             author,
             caption,
@@ -110,15 +133,15 @@ galerieForm.addEventListener("submit", async (event) => {
 
 /*
     SUPPRESSION D'UN SOUVENIR
+
+    Ne supprime que l'entrée dans la liste : le fichier
+    reste hébergé chez Cloudinary (sa suppression demande
+    une clé secrète, à faire depuis leur console si besoin).
 */
 
-function deleteGalerieItem(id, storagePath) {
+function deleteGalerieItem(id) {
 
     galerieCollection.doc(id).delete();
-
-    if (storagePath) {
-        storage.ref(storagePath).delete().catch(() => {});
-    }
 
 }
 
@@ -178,7 +201,7 @@ galerieCollection
                 .querySelector(".galerie-delete")
                 .addEventListener(
                     "click",
-                    () => deleteGalerieItem(doc.id, item.storagePath)
+                    () => deleteGalerieItem(doc.id)
                 );
 
             galerieGrid.appendChild(card);
