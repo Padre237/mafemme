@@ -83,7 +83,9 @@
 
         <section class="hero" id="accueil">
 
-            <div class="hero-image"></div>
+            <div class="hero-image">
+                <img id="heroBackgroundImage" alt="">
+            </div>
             <div class="hero-overlay"></div>
 
             <div class="floating-hearts" aria-hidden="true"></div>
@@ -147,7 +149,7 @@
 
             <div class="story-image reveal">
                 <img
-                    src="mafemme.jpg"
+                    id="storyImage"
                     alt="Armelle Jessica"
                 >
 
@@ -710,6 +712,62 @@
         </div>
 
 
+        <!-- ================= MODALE ÉDITEUR D'IMAGE DE FOND ================= -->
+
+        <div class="form-modal" id="imageEditorModal">
+
+            <div class="form-modal-card image-editor-card">
+
+                <button class="form-modal-close" aria-label="Fermer">
+                    <i data-lucide="x"></i>
+                </button>
+
+                <p class="form-modal-eyebrow">Personnaliser</p>
+
+                <h3 class="form-modal-title">
+                    Choisis <em>l'emplacement</em>
+                </h3>
+
+                <div class="editor-target-pills">
+                    <button type="button" class="filter-pill active" data-target="hero">Section Hero</button>
+                    <button type="button" class="filter-pill" data-target="histoire">Notre histoire</button>
+                </div>
+
+                <div class="editor-frame" id="editorFrame">
+                    <img id="editorImage" alt="Aperçu du recadrage" draggable="false">
+                </div>
+
+                <p class="editor-hint">Glisse la photo pour la repositionner.</p>
+
+                <div class="editor-controls">
+
+                    <label class="editor-zoom">
+                        <i data-lucide="zoom-in"></i>
+                        <input type="range" id="editorZoom" min="1" max="3" step="0.01" value="1">
+                    </label>
+
+                    <button type="button" class="editor-tool" id="editorRotate" aria-label="Tourner">
+                        <i data-lucide="rotate-cw"></i>
+                    </button>
+
+                    <button type="button" class="editor-tool" id="editorReset" aria-label="Réinitialiser">
+                        <i data-lucide="refresh-ccw"></i>
+                    </button>
+
+                </div>
+
+                <button type="button" class="primary-button" id="editorValidate">
+                    <i data-lucide="check"></i>
+                    <span>Valider</span>
+                </button>
+
+                <p class="activite-status" id="editorStatus"></p>
+
+            </div>
+
+        </div>
+
+
         <!-- ================= MODALE PETIT MOT ================= -->
 
         <div class="form-modal" id="messageModal">
@@ -825,7 +883,8 @@
     <script src="reactions.js"></script>
     <script src="engagement.js"></script>
     <script src="rendezvous.js"></script>
-    <script src="hero.js"></script>
+    <script src="background-images.js"></script>
+    <script src="image-editor.js"></script>
     <script src="gallery.js"></script>
     <script src="activite.js"></script>
 

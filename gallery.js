@@ -283,16 +283,26 @@ galerieCollection
                     isPhoto
                         ? `
                             <button
-                                class="galerie-set-hero ${isCurrentHeroImage(item.url) ? "active" : ""}"
-                                aria-label="Définir comme image de fond"
+                                class="galerie-set-hero ${
+                                    (isBackgroundImage("hero", item.url) || isBackgroundImage("histoire", item.url))
+                                        ? "active"
+                                        : ""
+                                }"
+                                aria-label="Utiliser comme image de fond"
                             >
                                 <i data-lucide="image"></i>
                             </button>
 
-                            <span class="hero-current-badge">
-                                <i data-lucide="check"></i>
-                                Image actuelle
-                            </span>
+                            <div class="hero-badges">
+                                <span class="hero-current-badge" data-badge-target="hero" ${isBackgroundImage("hero", item.url) ? "" : "hidden"}>
+                                    <i data-lucide="check"></i>
+                                    Fond du Hero
+                                </span>
+                                <span class="hero-current-badge" data-badge-target="histoire" ${isBackgroundImage("histoire", item.url) ? "" : "hidden"}>
+                                    <i data-lucide="check"></i>
+                                    Notre histoire
+                                </span>
+                            </div>
                         `
                         : ""
                 }
@@ -304,10 +314,6 @@ galerieCollection
                     <i data-lucide="trash-2"></i>
                 </button>
             `;
-
-            if (isPhoto && isCurrentHeroImage(item.url)) {
-                card.classList.add("hero-current");
-            }
 
             card
                 .querySelector(".galerie-delete")
@@ -323,7 +329,7 @@ galerieCollection
 
                 setHeroButton.addEventListener(
                     "click",
-                    () => setAsHeroBackground(item.url)
+                    () => openImageEditor(item.url)
                 );
 
             }

@@ -289,13 +289,23 @@ img {
     position: absolute;
     inset: 0;
 
-    background-image: url("https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?auto=format&fit=crop&w=1800&q=90");
-    background-size: cover;
-    background-position: center;
+    overflow: hidden;
+
+    background: var(--black);
 
     transform: scale(1.05);
 
     animation: heroZoom 18s cubic-bezier(.25,.1,.25,1) forwards;
+}
+
+.hero-image img {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+
+    max-width: none;
+
+    transform-origin: center center;
 }
 
 .hero-overlay {
@@ -490,6 +500,8 @@ img {
 .story-image {
     position: relative;
 
+    aspect-ratio: .82;
+
     border-radius: 4px;
     overflow: hidden;
 
@@ -497,14 +509,13 @@ img {
 }
 
 .story-image img {
-    aspect-ratio: .82;
-    object-fit: cover;
+    position: absolute;
+    top: 50%;
+    left: 50%;
 
-    transition: transform 1.4s cubic-bezier(.16,.9,.3,1);
-}
+    max-width: none;
 
-.story-image:hover img {
-    transform: scale(1.06);
+    transform-origin: center center;
 }
 
 .image-caption {
@@ -1836,14 +1847,20 @@ body.modal-open {
     width: 14px;
 }
 
-.hero-current-badge {
-    display: none;
-    align-items: center;
-    gap: 5px;
-
+.hero-badges {
     position: absolute;
     left: 10px;
     bottom: 10px;
+
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.hero-current-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
 
     padding: 5px 11px;
 
@@ -1856,12 +1873,12 @@ body.modal-open {
     font-weight: 600;
 }
 
-.hero-current-badge svg {
-    width: 12px;
+.hero-current-badge[hidden] {
+    display: none;
 }
 
-.galerie-card.hero-current .hero-current-badge {
-    display: inline-flex;
+.hero-current-badge svg {
+    width: 12px;
 }
 
 
@@ -2596,6 +2613,120 @@ body.modal-open {
 
 .chat-send:disabled {
     opacity: .6;
+}
+
+
+/* =====================================================
+   ÉDITEUR D'IMAGE (RECADRAGE / ZOOM / ROTATION)
+===================================================== */
+
+.image-editor-card {
+    max-width: 480px;
+}
+
+.editor-target-pills {
+    display: flex;
+    gap: 8px;
+
+    margin: 16px 0;
+}
+
+.editor-frame {
+    position: relative;
+    overflow: hidden;
+
+    width: 100%;
+    aspect-ratio: 16 / 9;
+
+    background: var(--black);
+    border-radius: 8px;
+
+    touch-action: none;
+    cursor: grab;
+}
+
+.editor-frame.ratio-histoire {
+    max-width: 220px;
+    aspect-ratio: .82;
+
+    margin: 0 auto;
+}
+
+.editor-frame:active {
+    cursor: grabbing;
+}
+
+.editor-frame img {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+
+    max-width: none;
+
+    transform-origin: center center;
+
+    user-select: none;
+    pointer-events: none;
+}
+
+.editor-hint {
+    margin: 10px 0 0;
+
+    color: var(--text-light);
+
+    font-size: 12px;
+    font-style: italic;
+    text-align: center;
+}
+
+.editor-controls {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+
+    margin: 16px 0;
+}
+
+.editor-zoom {
+    display: flex;
+    flex: 1;
+    align-items: center;
+    gap: 8px;
+
+    color: var(--text-light);
+}
+
+.editor-zoom svg {
+    width: 16px;
+}
+
+.editor-zoom input[type="range"] {
+    flex: 1;
+}
+
+.editor-tool {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+
+    width: 38px;
+    height: 38px;
+
+    color: var(--text);
+    background: var(--cream);
+
+    border-radius: 50%;
+
+    transition: var(--transition);
+}
+
+.editor-tool:hover {
+    background: var(--cream-dark);
+}
+
+.editor-tool svg {
+    width: 16px;
 }
 
 
