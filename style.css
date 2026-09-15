@@ -2041,6 +2041,10 @@ body.modal-open {
     transition: var(--transition);
 }
 
+.galerie-lock-toggle.solo {
+    left: 10px;
+}
+
 .galerie-lock-toggle:hover {
     background: var(--burgundy-light);
 }

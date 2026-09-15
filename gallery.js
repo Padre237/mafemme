@@ -266,7 +266,7 @@ function buildLockedGalerieCard(item) {
 
             <i data-lucide="lock"></i>
 
-            <p>Photo masquée</p>
+            <p>${item.type === "video" ? "Vidéo masquée" : "Photo masquée"}</p>
 
             <form class="galerie-unlock-form">
 
@@ -331,7 +331,7 @@ function buildGalerieCard(item) {
 
     const isPhoto = item.type !== "video";
 
-    if (isPhoto && item.locked && !isPhotoUnlocked(item.id)) {
+    if (item.locked && !isPhotoUnlocked(item.id)) {
         return buildLockedGalerieCard(item);
     }
 
@@ -378,16 +378,16 @@ function buildGalerieCard(item) {
                                 Notre histoire
                             </span>
                         </div>
-
-                        <button
-                            class="galerie-lock-toggle"
-                            aria-label="${item.locked ? "Cacher à nouveau" : "Masquer cette photo"}"
-                        >
-                            <i data-lucide="${item.locked ? "eye" : "eye-off"}"></i>
-                        </button>
                     `
                     : ""
             }
+
+            <button
+                class="galerie-lock-toggle ${isPhoto ? "" : "solo"}"
+                aria-label="${item.locked ? "Cacher à nouveau" : (isPhoto ? "Masquer cette photo" : "Masquer cette vidéo")}"
+            >
+                <i data-lucide="${item.locked ? "eye" : "eye-off"}"></i>
+            </button>
 
             <button
                 class="galerie-delete"
@@ -406,7 +406,7 @@ function buildGalerieCard(item) {
                     : ""
             }
             ${
-                isPhoto && item.locked
+                item.locked
                     ? `<button type="button" class="galerie-unlock-forever">Retirer le verrou</button>`
                     : ""
             }
