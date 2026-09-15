@@ -2000,8 +2000,65 @@ body.modal-open {
    CARROUSEL "AUJOURD'HUI" + MODALE "TOUT VOIR"
 ===================================================== */
 
+.activite-launcher {
+    min-height: 40px;
+}
+
 .activite-today {
     margin-bottom: 20px;
+}
+
+.activite-see-all-standalone {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+
+    padding: 12px 20px;
+
+    color: var(--burgundy-light);
+    background: var(--cream);
+
+    border-radius: 100px;
+
+    font-size: 14px;
+    font-weight: 500;
+
+    transition: var(--transition);
+}
+
+.activite-see-all-standalone svg {
+    width: 16px;
+}
+
+.activite-see-all-standalone:hover {
+    background: var(--cream-dark);
+}
+
+.activite-filter-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+
+    margin: 14px 0;
+}
+
+.filter-pill {
+    padding: 7px 15px;
+
+    color: var(--text-light);
+    background: var(--cream);
+
+    border-radius: 100px;
+
+    font-size: 13px;
+    font-weight: 500;
+
+    transition: var(--transition);
+}
+
+.filter-pill.active {
+    color: white;
+    background: var(--burgundy-light);
 }
 
 .activite-today-header {
@@ -2269,6 +2326,216 @@ body.modal-open {
 
 .comment-form button:hover {
     background: var(--burgundy);
+}
+
+.comment-status {
+    margin-top: 6px;
+
+    color: var(--text-light);
+
+    font-size: 11px;
+}
+
+.comment-status.error {
+    color: #b3261e;
+}
+
+
+/* =====================================================
+   EXPLOSION D'EMOJI AU CLIC
+===================================================== */
+
+.emoji-particle {
+    position: fixed;
+    z-index: 999;
+
+    font-size: 20px;
+
+    pointer-events: none;
+
+    transform: translate(-50%, -50%) scale(0);
+
+    animation: emojiPop 700ms ease-out forwards;
+}
+
+@keyframes emojiPop {
+
+    0% {
+        transform: translate(-50%, -50%) scale(0) rotate(0deg);
+        opacity: 1;
+    }
+
+    30% {
+        transform:
+            translate(
+                calc(-50% + var(--tx) * 0.5),
+                calc(-50% + var(--ty) * 0.5)
+            )
+            scale(var(--scale))
+            rotate(var(--rot));
+        opacity: 1;
+    }
+
+    100% {
+        transform:
+            translate(
+                calc(-50% + var(--tx)),
+                calc(-50% + var(--ty))
+            )
+            scale(calc(var(--scale) * 0.6))
+            rotate(var(--rot));
+        opacity: 0;
+    }
+
+}
+
+
+/* =====================================================
+   CHAT "PETIT MOT"
+===================================================== */
+
+.chat-modal-card {
+    max-height: 82vh;
+
+    display: flex;
+    flex-direction: column;
+}
+
+.chat-messages {
+    flex: 1;
+    min-height: 220px;
+    max-height: 50vh;
+
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+
+    margin: 16px 0;
+    padding-right: 4px;
+
+    overflow-y: auto;
+}
+
+.chat-empty {
+    margin: auto;
+
+    color: var(--text-light);
+
+    font-family: var(--serif);
+    font-size: 14px;
+    font-style: italic;
+    text-align: center;
+}
+
+.chat-bubble {
+    max-width: 78%;
+
+    padding: 10px 14px;
+
+    border-radius: 16px;
+
+    font-family: var(--serif);
+    font-size: 14px;
+    line-height: 1.4;
+}
+
+.chat-bubble-author {
+    display: block;
+
+    margin-bottom: 2px;
+
+    color: var(--burgundy-light);
+
+    font-family: var(--sans);
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.chat-bubble-time {
+    display: block;
+
+    margin-top: 4px;
+
+    font-size: 10px;
+    opacity: .65;
+}
+
+.chat-bubble.other {
+    align-self: flex-start;
+
+    color: var(--text);
+    background: var(--cream);
+
+    border-bottom-left-radius: 4px;
+}
+
+.chat-bubble.other .chat-bubble-author {
+    color: var(--burgundy-light);
+}
+
+.chat-bubble.own {
+    align-self: flex-end;
+
+    color: white;
+    background: var(--burgundy-light);
+
+    border-bottom-right-radius: 4px;
+}
+
+.chat-input-bar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.chat-input-bar input {
+    padding: 10px 14px;
+
+    color: var(--text);
+    background: var(--white);
+    border: 1px solid rgba(0,0,0,.08);
+
+    border-radius: 100px;
+
+    font-size: 13px;
+}
+
+.chat-input-bar .chat-author {
+    flex: 0 0 84px;
+}
+
+.chat-input-bar .chat-text {
+    flex: 1;
+    min-width: 0;
+}
+
+.chat-send {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+
+    width: 40px;
+    height: 40px;
+
+    color: white;
+    background: var(--burgundy-light);
+
+    border-radius: 50%;
+
+    transition: var(--transition);
+}
+
+.chat-send svg {
+    width: 16px;
+}
+
+.chat-send:hover {
+    background: var(--burgundy);
+}
+
+.chat-send:disabled {
+    opacity: .6;
 }
 
 

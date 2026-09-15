@@ -13,9 +13,6 @@ const messageStatus =
 const messageSubmit =
     document.getElementById("messageSubmit");
 
-const activiteFeed =
-    document.getElementById("activiteFeed");
-
 const activiteEmpty =
     document.getElementById("activiteEmpty");
 
@@ -28,11 +25,20 @@ const activiteCarousel =
 const activiteSeeAll =
     document.getElementById("activiteSeeAll");
 
+const activiteSeeAllStandalone =
+    document.getElementById("activiteSeeAllStandalone");
+
 const activiteModal =
     document.getElementById("activiteModal");
 
 const activiteModalFeed =
     document.getElementById("activiteModalFeed");
+
+const activiteFilterPills =
+    document.getElementById("activiteFilterPills");
+
+const chatMessages =
+    document.getElementById("chatMessages");
 
 
 /*
@@ -185,6 +191,9 @@ function toJsDate(timestamp) {
 
 }
 
+let lastActiviteItems = [];
+let currentActiviteFilter = "all";
+
 function renderActivite() {
 
     const items = [
@@ -246,13 +255,104 @@ function renderActivite() {
 
     checkForNewContent(items, "activite", "activite");
 
-    renderActiviteCarousel(items);
-    renderActiviteList(activiteFeed, items.slice(0, 30), true);
-    renderActiviteList(activiteModalFeed, items.slice(0, 50), false);
+    lastActiviteItems = items;
+
+    renderActiviteLauncher(items);
+    renderModalFeed();
 
     if (window.lucide) {
         lucide.createIcons();
     }
+
+}
+
+
+/*
+    ENTRÉE DE LA SECTION : CARROUSEL DU JOUR, OU BOUTON
+    "VOIR TOUT" SEUL SI RIEN AUJOURD'HUI MAIS DE L'HISTORIQUE
+*/
+
+function renderActiviteLauncher(items) {
+
+    const todayItems =
+        items.filter(item => dayGroupLabel(item.createdAt) === "Aujourd'hui");
+
+    if (items.length === 0) {
+
+        activiteToday.hidden = true;
+        activiteSeeAllStandalone.hidden = true;
+        activiteEmpty.hidden = false;
+
+        return;
+
+    }
+
+    activiteEmpty.hidden = true;
+
+    if (todayItems.length > 0) {
+
+        activiteToday.hidden = false;
+        activiteSeeAllStandalone.hidden = true;
+
+        renderActiviteCarousel(todayItems);
+
+    } else {
+
+        activiteToday.hidden = true;
+        activiteSeeAllStandalone.hidden = false;
+
+    }
+
+}
+
+
+/*
+    LISTE FILTRÉE DE LA MODALE "TOUT VOIR"
+*/
+
+function renderModalFeed() {
+
+    const filtered =
+        currentActiviteFilter === "all"
+            ? lastActiviteItems
+            : lastActiviteItems.filter(item => item.type === currentActiviteFilter);
+
+    renderActiviteList(activiteModalFeed, filtered.slice(0, 50), true);
+
+    if (window.lucide) {
+        lucide.createIcons();
+    }
+
+}
+
+if (activiteFilterPills) {
+
+    activiteFilterPills.querySelectorAll(".filter-pill").forEach(pill => {
+
+        pill.addEventListener("click", () => {
+
+            activiteFilterPills
+                .querySelectorAll(".filter-pill")
+                .forEach(p => p.classList.remove("active"));
+
+            pill.classList.add("active");
+
+            currentActiviteFilter = pill.dataset.filter;
+
+            renderModalFeed();
+
+        });
+
+    });
+
+}
+
+if (activiteSeeAllStandalone) {
+
+    activiteSeeAllStandalone.addEventListener(
+        "click",
+        () => openModal(activiteModal)
+    );
 
 }
 
@@ -302,6 +402,7 @@ function renderActiviteList(container, items, grouped) {
 
         const empty = activiteEmpty.cloneNode(true);
         empty.removeAttribute("id");
+        empty.hidden = false;
 
         container.appendChild(empty);
 
@@ -344,24 +445,11 @@ function renderActiviteList(container, items, grouped) {
     CARROUSEL "AUJOURD'HUI"
 */
 
-function renderActiviteCarousel(items) {
+function renderActiviteCarousel(todayItems) {
 
-    if (!activiteCarousel || !activiteToday) {
+    if (!activiteCarousel) {
         return;
     }
-
-    const todayItems =
-        items.filter(item => dayGroupLabel(item.createdAt) === "Aujourd'hui");
-
-    if (todayItems.length === 0) {
-
-        activiteToday.hidden = true;
-
-        return;
-
-    }
-
-    activiteToday.hidden = false;
 
     activiteCarousel.innerHTML = "";
 
@@ -432,5 +520,96 @@ messagesCollection.onSnapshot(snapshot => {
         }));
 
     renderActivite();
+    renderChatMessages();
 
 });
+
+
+/*
+    CHAT "PETIT MOT" (BULLES DE MESSAGERIE)
+*/
+
+function isOwnMessage(author) {
+
+    const saved = getSavedName().trim().toLowerCase();
+
+    if (!saved || !author) {
+        return false;
+    }
+
+    return author.trim().toLowerCase() === saved;
+
+}
+
+function renderChatMessages() {
+
+    if (!chatMessages) {
+        return;
+    }
+
+    chatMessages.innerHTML = "";
+
+    const sorted =
+        [...activiteState.messages].sort((a, b) => {
+
+            const timeA = a.createdAt ? a.createdAt.getTime() : 0;
+            const timeB = b.createdAt ? b.createdAt.getTime() : 0;
+
+            return timeA - timeB;
+
+        });
+
+    if (sorted.length === 0) {
+
+        chatMessages.innerHTML =
+            `<p class="chat-empty">Aucun message pour l'instant — écris le premier !</p>`;
+
+        return;
+
+    }
+
+    sorted.forEach(message => {
+
+        const own = isOwnMessage(message.author);
+
+        const bubble =
+            document.createElement("div");
+
+        bubble.classList.add("chat-bubble", own ? "own" : "other");
+
+        bubble.innerHTML = `
+            ${
+                own
+                    ? ""
+                    : `<span class="chat-bubble-author">${escapeHtml(message.author) || "Quelqu'un"}</span>`
+            }
+            ${escapeHtml(message.text)}
+            <span class="chat-bubble-time">${timeAgo(message.createdAt)}</span>
+        `;
+
+        chatMessages.appendChild(bubble);
+
+    });
+
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+
+}
+
+const messageModalTrigger =
+    document.querySelector('[data-modal-target="messageModal"]');
+
+if (messageModalTrigger) {
+
+    messageModalTrigger.addEventListener("click", () => {
+
+        setTimeout(() => {
+
+            if (chatMessages) {
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }
+
+        }, 50);
+
+    });
+
+}

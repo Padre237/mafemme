@@ -647,25 +647,32 @@
 
                 </div>
 
-                <div class="activite-today" id="activiteToday" hidden>
+                <div class="activite-launcher">
 
-                    <div class="activite-today-header">
-                        <h3>Aujourd'hui</h3>
-                        <button class="activite-see-all" id="activiteSeeAll" type="button">
-                            <span>Voir tout</span>
-                            <i data-lucide="arrow-right"></i>
-                        </button>
+                    <div class="activite-today" id="activiteToday" hidden>
+
+                        <div class="activite-today-header">
+                            <h3>Aujourd'hui</h3>
+                            <button class="activite-see-all" id="activiteSeeAll" type="button">
+                                <span>Voir tout</span>
+                                <i data-lucide="arrow-right"></i>
+                            </button>
+                        </div>
+
+                        <div class="activite-carousel" id="activiteCarousel"></div>
+
                     </div>
 
-                    <div class="activite-carousel" id="activiteCarousel"></div>
+                    <button class="activite-see-all-standalone" id="activiteSeeAllStandalone" type="button" hidden>
+                        <i data-lucide="history"></i>
+                        <span>Voir toute l'activité</span>
+                    </button>
 
-                </div>
-
-                <div class="activite-feed" id="activiteFeed">
-                    <p class="activite-empty" id="activiteEmpty">
+                    <p class="activite-empty" id="activiteEmpty" hidden>
                         Rien pour l'instant — soyez les premiers
                         à ajouter quelque chose !
                     </p>
+
                 </div>
 
             </div>
@@ -689,6 +696,13 @@
                     Les plus <em>récentes</em> d'abord
                 </h3>
 
+                <div class="activite-filter-pills" id="activiteFilterPills">
+                    <button type="button" class="filter-pill active" data-filter="all">Tout</button>
+                    <button type="button" class="filter-pill" data-filter="rendezvous">Rendez-vous</button>
+                    <button type="button" class="filter-pill" data-filter="galerie">Galerie</button>
+                    <button type="button" class="filter-pill" data-filter="message">Petits mots</button>
+                </div>
+
                 <div class="activite-feed activite-modal-feed" id="activiteModalFeed"></div>
 
             </div>
@@ -700,7 +714,7 @@
 
         <div class="form-modal" id="messageModal">
 
-            <div class="form-modal-card">
+            <div class="form-modal-card chat-modal-card">
 
                 <button class="form-modal-close" aria-label="Fermer">
                     <i data-lucide="x"></i>
@@ -709,41 +723,37 @@
                 <p class="form-modal-eyebrow">Juste pour toi</p>
 
                 <h3 class="form-modal-title">
-                    Laisse
-                    <em>un petit mot</em>
+                    Notre
+                    <em>petit chat</em>
                 </h3>
 
-                <form class="activite-form" id="messageForm">
+                <div class="chat-messages" id="chatMessages"></div>
 
-                    <label>
-                        <span>Ton prénom</span>
-                        <input
-                            type="text"
-                            id="messageAuthor"
-                            class="author-name-input"
-                            placeholder="Ton prénom"
-                            required
-                        >
-                    </label>
+                <form class="chat-input-bar" id="messageForm">
 
-                    <label>
-                        <span>Petit mot</span>
-                        <textarea
-                            id="messageText"
-                            rows="2"
-                            placeholder="Laisse un petit mot..."
-                            required
-                        ></textarea>
-                    </label>
+                    <input
+                        type="text"
+                        id="messageAuthor"
+                        class="author-name-input chat-author"
+                        placeholder="Toi"
+                        required
+                    >
 
-                    <button type="submit" class="primary-button" id="messageSubmit">
-                        <i data-lucide="message-circle-heart"></i>
-                        <span>Publier ce mot</span>
+                    <input
+                        type="text"
+                        id="messageText"
+                        class="chat-text"
+                        placeholder="Écris un message..."
+                        required
+                    >
+
+                    <button type="submit" class="chat-send" id="messageSubmit" aria-label="Envoyer">
+                        <i data-lucide="send"></i>
                     </button>
 
-                    <p class="activite-status" id="messageStatus"></p>
-
                 </form>
+
+                <p class="activite-status" id="messageStatus"></p>
 
             </div>
 

@@ -67,6 +67,48 @@ function renderEmojiBar(collectionName, docId, emojiReactions) {
 
 }
 
+function explodeEmoji(originButton, emoji) {
+
+    const rect = originButton.getBoundingClientRect();
+
+    const originX = rect.left + rect.width / 2;
+    const originY = rect.top + rect.height / 2;
+
+    const count = 8 + Math.floor(Math.random() * 3);
+
+    for (let i = 0; i < count; i++) {
+
+        const particle =
+            document.createElement("span");
+
+        particle.classList.add("emoji-particle");
+        particle.textContent = emoji;
+
+        const angle =
+            (Math.PI * 2 * i) / count + (Math.random() * 0.6 - 0.3);
+
+        const distance = 45 + Math.random() * 55;
+
+        const tx = Math.cos(angle) * distance;
+        const ty = Math.sin(angle) * distance - 25;
+
+        particle.style.left = `${originX}px`;
+        particle.style.top = `${originY}px`;
+
+        particle.style.setProperty("--tx", `${tx}px`);
+        particle.style.setProperty("--ty", `${ty}px`);
+        particle.style.setProperty("--scale", (0.6 + Math.random() * 0.9).toFixed(2));
+        particle.style.setProperty("--rot", `${Math.round(Math.random() * 70 - 35)}deg`);
+        particle.style.animationDelay = `${Math.round(Math.random() * 90)}ms`;
+
+        document.body.appendChild(particle);
+
+        particle.addEventListener("animationend", () => particle.remove());
+
+    }
+
+}
+
 function bindEmojiBar(bar) {
 
     if (!bar) {
@@ -90,6 +132,7 @@ function bindEmojiBar(bar) {
                 reactedSet.delete(key);
             } else {
                 reactedSet.add(key);
+                explodeEmoji(button, emoji);
             }
 
             saveEmojiReactedSet(reactedSet);
@@ -153,6 +196,8 @@ function renderCommentsSection() {
                     </button>
 
                 </form>
+
+                <p class="comment-status"></p>
 
             </div>
 
@@ -229,6 +274,9 @@ function bindCommentsSection(section, collectionName, docId) {
 
     });
 
+    const status = section.querySelector(".comment-status");
+    const submitButton = form.querySelector("button[type=submit]");
+
     form.addEventListener("submit", async (event) => {
 
         event.preventDefault();
@@ -239,6 +287,10 @@ function bindCommentsSection(section, collectionName, docId) {
         if (!text) {
             return;
         }
+
+        submitButton.disabled = true;
+        status.textContent = "";
+        status.classList.remove("error");
 
         try {
 
@@ -256,6 +308,17 @@ function bindCommentsSection(section, collectionName, docId) {
         } catch (error) {
 
             console.error(error);
+
+            status.textContent =
+                error.code === "permission-denied"
+                    ? "Envoi refusé (permissions Firestore à vérifier)."
+                    : "Une erreur est survenue, réessaie.";
+
+            status.classList.add("error");
+
+        } finally {
+
+            submitButton.disabled = false;
 
         }
 
