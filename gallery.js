@@ -248,17 +248,97 @@ function deleteGalerieItem(id) {
 
 
 /*
+    CARTE VERROUILLÉE (PHOTO MASQUÉE PAR CODE)
+
+    La photo n'est pas mise dans le DOM tant que le bon
+    code n'a pas été validé.
+*/
+
+function buildLockedGalerieCard(item) {
+
+    const card =
+        document.createElement("div");
+
+    card.classList.add("galerie-card", "galerie-card-locked");
+
+    card.innerHTML = `
+        <div class="galerie-lock-screen">
+
+            <i data-lucide="lock"></i>
+
+            <p>Photo masquée</p>
+
+            <form class="galerie-unlock-form">
+
+                <input
+                    type="password"
+                    inputmode="numeric"
+                    class="galerie-unlock-input"
+                    placeholder="Code"
+                    required
+                >
+
+                <button type="submit" aria-label="Déverrouiller">
+                    <i data-lucide="unlock"></i>
+                </button>
+
+            </form>
+
+            <p class="galerie-unlock-status"></p>
+
+        </div>
+    `;
+
+    const form = card.querySelector(".galerie-unlock-form");
+    const input = card.querySelector(".galerie-unlock-input");
+    const status = card.querySelector(".galerie-unlock-status");
+
+    form.addEventListener("submit", async (event) => {
+
+        event.preventDefault();
+
+        const code = input.value.trim();
+
+        status.textContent = "";
+
+        const valid = await verifyGalleryCode(code);
+
+        if (valid) {
+
+            unlockPhoto(item.id);
+            renderGalerieGrid();
+
+        } else {
+
+            status.textContent = "Code incorrect.";
+            input.value = "";
+            input.focus();
+
+        }
+
+    });
+
+    return card;
+
+}
+
+
+/*
     CONSTRUCTION D'UNE CARTE DE LA GALERIE
 */
 
 function buildGalerieCard(item) {
 
+    const isPhoto = item.type !== "video";
+
+    if (isPhoto && item.locked && !isPhotoUnlocked(item.id)) {
+        return buildLockedGalerieCard(item);
+    }
+
     const card =
         document.createElement("div");
 
     card.classList.add("galerie-card");
-
-    const isPhoto = item.type !== "video";
 
     if (isPhoto) {
         card.dataset.url = item.url;
@@ -298,6 +378,13 @@ function buildGalerieCard(item) {
                                 Notre histoire
                             </span>
                         </div>
+
+                        <button
+                            class="galerie-lock-toggle"
+                            aria-label="${item.locked ? "Cacher à nouveau" : "Masquer cette photo"}"
+                        >
+                            <i data-lucide="${item.locked ? "eye" : "eye-off"}"></i>
+                        </button>
                     `
                     : ""
             }
@@ -316,6 +403,11 @@ function buildGalerieCard(item) {
             ${
                 item.caption
                     ? `<p>${escapeHtml(item.caption)}</p>`
+                    : ""
+            }
+            ${
+                isPhoto && item.locked
+                    ? `<button type="button" class="galerie-unlock-forever">Retirer le verrou</button>`
                     : ""
             }
             ${renderEmojiBar("galerie", item.id, item.emojiReactions)}
@@ -339,6 +431,43 @@ function buildGalerieCard(item) {
             "click",
             () => openImageEditor(item.url)
         );
+
+    }
+
+    const lockToggleButton =
+        card.querySelector(".galerie-lock-toggle");
+
+    if (lockToggleButton) {
+
+        lockToggleButton.addEventListener("click", () => {
+
+            if (item.locked) {
+
+                relockPhoto(item.id);
+                renderGalerieGrid();
+
+            } else {
+
+                setGaleriePhotoLocked(item.id, true)
+                    .catch(error => console.error(error));
+
+            }
+
+        });
+
+    }
+
+    const unlockForeverButton =
+        card.querySelector(".galerie-unlock-forever");
+
+    if (unlockForeverButton) {
+
+        unlockForeverButton.addEventListener("click", () => {
+
+            setGaleriePhotoLocked(item.id, false)
+                .catch(error => console.error(error));
+
+        });
 
     }
 
