@@ -2383,6 +2383,28 @@ body.modal-open {
     color: var(--burgundy-light);
 }
 
+.comment-count {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    min-width: 17px;
+    height: 17px;
+    padding: 0 5px;
+
+    color: white;
+    background: var(--burgundy-light);
+
+    border-radius: 100px;
+
+    font-size: 10px;
+    font-weight: 600;
+}
+
+.comment-count[hidden] {
+    display: none;
+}
+
 .comments-panel {
     margin-top: 10px;
     padding: 12px;
@@ -2537,22 +2559,37 @@ body.modal-open {
 ===================================================== */
 
 .chat-modal-card {
-    max-height: 82vh;
+    max-height: 88vh;
 
     display: flex;
     flex-direction: column;
+
+    padding: 24px 18px 18px;
+}
+
+.chat-modal-card .form-modal-eyebrow {
+    display: none;
+}
+
+.chat-modal-card .form-modal-title {
+    margin-bottom: 4px;
+
+    font-size: 22px;
+}
+
+.chat-modal-card .form-modal-title em {
+    font-size: 26px;
 }
 
 .chat-messages {
     flex: 1;
-    min-height: 220px;
-    max-height: 50vh;
+    min-height: 0;
 
     display: flex;
     flex-direction: column;
     gap: 10px;
 
-    margin: 16px 0;
+    margin: 14px 0;
     padding-right: 4px;
 
     overflow-y: auto;

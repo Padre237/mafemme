@@ -510,9 +510,22 @@ galerieLoadMore.addEventListener("click", () => {
 
 /*
     AFFICHAGE DE LA GRILLE (FILTRÉE ET PAGINÉE)
+
+    Si quelqu'un est en train d'écrire un commentaire, on
+    évite de redessiner la grille (ça couperait sa frappe) :
+    le rendu est reporté jusqu'à ce qu'il quitte le champ.
 */
 
+let galerieRenderPending = false;
+
 function renderGalerieGrid() {
+
+    if (isTypingInComments(galerieGrid)) {
+        galerieRenderPending = true;
+        return;
+    }
+
+    galerieRenderPending = false;
 
     galerieGrid.innerHTML = "";
 
@@ -555,6 +568,18 @@ function renderGalerieGrid() {
     }
 
 }
+
+galerieGrid.addEventListener("focusout", () => {
+
+    setTimeout(() => {
+
+        if (galerieRenderPending && !isTypingInComments(galerieGrid)) {
+            renderGalerieGrid();
+        }
+
+    }, 0);
+
+});
 
 
 /*

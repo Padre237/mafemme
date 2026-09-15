@@ -258,37 +258,38 @@ countdownInterval = setInterval(updateCountdownDisplay, 1000);
 
 
 /*
-    AFFICHAGE EN TEMPS RÉEL DE LA LISTE
+    AFFICHAGE DE LA LISTE
+
+    Si quelqu'un est en train d'écrire un commentaire, on
+    évite de redessiner la liste (ça couperait sa frappe) :
+    le rendu est reporté jusqu'à ce qu'il quitte le champ.
 */
 
-rendezvousCollection
-    .orderBy("datetime", "asc")
-    .onSnapshot(snapshot => {
+let lastRendezvousItems = [];
+let rendezvousRenderPending = false;
 
-        rendezvousCount.textContent = snapshot.size;
+function renderRendezvousList() {
 
-        rendezvousList.innerHTML = "";
+    if (isTypingInComments(rendezvousList)) {
+        rendezvousRenderPending = true;
+        return;
+    }
 
-        const allRendezvous =
-            snapshot.docs.map(doc => ({
-                id: doc.id,
-                ...doc.data()
-            }));
+    rendezvousRenderPending = false;
 
-        upcomingRendezvous =
-            findUpcomingConfirmed(allRendezvous);
+    const allRendezvous = lastRendezvousItems;
 
-        updateCountdownDisplay();
+    rendezvousList.innerHTML = "";
 
-        if (snapshot.empty) {
+    if (allRendezvous.length === 0) {
 
-            rendezvousList.appendChild(rendezvousEmpty);
+        rendezvousList.appendChild(rendezvousEmpty);
 
-            return;
+        return;
 
-        }
+    }
 
-        allRendezvous.forEach(rendezvous => {
+    allRendezvous.forEach(rendezvous => {
 
             const card =
                 document.createElement("div");
@@ -384,9 +385,47 @@ rendezvousCollection
 
         });
 
-        if (window.lucide) {
-            lucide.createIcons();
+    if (window.lucide) {
+        lucide.createIcons();
+    }
+
+}
+
+rendezvousList.addEventListener("focusout", () => {
+
+    setTimeout(() => {
+
+        if (rendezvousRenderPending && !isTypingInComments(rendezvousList)) {
+            renderRendezvousList();
         }
+
+    }, 0);
+
+});
+
+
+/*
+    AFFICHAGE EN TEMPS RÉEL DE LA LISTE
+*/
+
+rendezvousCollection
+    .orderBy("datetime", "asc")
+    .onSnapshot(snapshot => {
+
+        rendezvousCount.textContent = snapshot.size;
+
+        lastRendezvousItems =
+            snapshot.docs.map(doc => ({
+                id: doc.id,
+                ...doc.data()
+            }));
+
+        upcomingRendezvous =
+            findUpcomingConfirmed(lastRendezvousItems);
+
+        updateCountdownDisplay();
+
+        renderRendezvousList();
 
     }, error => {
 

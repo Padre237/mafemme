@@ -169,6 +169,7 @@ function renderCommentsSection() {
             <button type="button" class="comments-toggle">
                 <i data-lucide="message-circle"></i>
                 <span>Commenter</span>
+                <span class="comment-count" hidden>0</span>
             </button>
 
             <div class="comments-panel" hidden>
@@ -206,6 +207,27 @@ function renderCommentsSection() {
 
 }
 
+
+/*
+    BROUILLON DE COMMENTAIRE (garde le texte tapé et l'état
+    ouvert/fermé du panneau en dehors du DOM, au cas où la
+    carte serait quand même redessinée pendant la frappe)
+*/
+
+const commentDrafts = {};
+
+function isTypingInComments(container) {
+
+    const active = document.activeElement;
+
+    return (
+        Boolean(active) &&
+        container.contains(active) &&
+        (active.classList.contains("comment-author") || active.classList.contains("comment-text"))
+    );
+
+}
+
 function bindCommentsSection(section, collectionName, docId) {
 
     if (!section) {
@@ -213,69 +235,81 @@ function bindCommentsSection(section, collectionName, docId) {
     }
 
     const toggle = section.querySelector(".comments-toggle");
+    const countBadge = section.querySelector(".comment-count");
     const panel = section.querySelector(".comments-panel");
     const list = section.querySelector(".comments-list");
     const form = section.querySelector(".comment-form");
     const authorInput = form.querySelector(".comment-author");
     const textInput = form.querySelector(".comment-text");
+    const status = section.querySelector(".comment-status");
+    const submitButton = form.querySelector("button[type=submit]");
 
-    const saved = getSavedName();
+    const draftKey = `${collectionName}/${docId}`;
 
-    if (saved) {
-        authorInput.value = saved;
-    }
+    const draft =
+        commentDrafts[draftKey] ||
+        (commentDrafts[draftKey] = {
+            open: false,
+            author: "",
+            text: ""
+        });
 
-    const commentsRef =
-        db.collection(collectionName).doc(docId).collection("comments");
+    authorInput.value = draft.author || getSavedName();
+    textInput.value = draft.text;
+    panel.hidden = !draft.open;
 
-    let loaded = false;
+    authorInput.addEventListener("input", () => {
+        draft.author = authorInput.value;
+    });
+
+    textInput.addEventListener("input", () => {
+        draft.text = textInput.value;
+    });
 
     toggle.addEventListener("click", () => {
 
         panel.hidden = !panel.hidden;
-
-        if (panel.hidden || loaded) {
-            return;
-        }
-
-        loaded = true;
-
-        commentsRef.orderBy("createdAt", "asc").onSnapshot(snapshot => {
-
-            list.innerHTML = "";
-
-            if (snapshot.empty) {
-
-                list.innerHTML =
-                    `<p class="comments-empty">Aucun commentaire pour l'instant.</p>`;
-
-                return;
-
-            }
-
-            snapshot.forEach(doc => {
-
-                const comment = doc.data();
-
-                const item = document.createElement("p");
-                item.classList.add("comment-item");
-
-                item.innerHTML =
-                    `<strong>${escapeHtml(comment.author) || "Quelqu'un"}</strong> ` +
-                    escapeHtml(comment.text);
-
-                list.appendChild(item);
-
-            });
-
-            list.scrollTop = list.scrollHeight;
-
-        });
+        draft.open = !panel.hidden;
 
     });
 
-    const status = section.querySelector(".comment-status");
-    const submitButton = form.querySelector("button[type=submit]");
+    const commentsRef =
+        db.collection(collectionName).doc(docId).collection("comments");
+
+    commentsRef.orderBy("createdAt", "asc").onSnapshot(snapshot => {
+
+        countBadge.hidden = snapshot.size === 0;
+        countBadge.textContent = snapshot.size;
+
+        list.innerHTML = "";
+
+        if (snapshot.empty) {
+
+            list.innerHTML =
+                `<p class="comments-empty">Aucun commentaire pour l'instant.</p>`;
+
+            return;
+
+        }
+
+        snapshot.forEach(doc => {
+
+            const comment = doc.data();
+
+            const item = document.createElement("p");
+            item.classList.add("comment-item");
+
+            item.innerHTML =
+                `<strong>${escapeHtml(comment.author) || "Quelqu'un"}</strong> ` +
+                escapeHtml(comment.text);
+
+            list.appendChild(item);
+
+        });
+
+        list.scrollTop = list.scrollHeight;
+
+    });
 
     form.addEventListener("submit", async (event) => {
 
@@ -304,6 +338,7 @@ function bindCommentsSection(section, collectionName, docId) {
             saveName(author);
 
             textInput.value = "";
+            draft.text = "";
 
         } catch (error) {
 

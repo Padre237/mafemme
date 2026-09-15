@@ -40,6 +40,23 @@ const activiteFilterPills =
 const chatMessages =
     document.getElementById("chatMessages");
 
+const messageAuthorInput =
+    document.getElementById("messageAuthor");
+
+
+/*
+    ALLÈGE LA BARRE DE SAISIE DU CHAT : le champ prénom ne
+    s'affiche que tant qu'aucun prénom n'est mémorisé.
+*/
+
+function updateChatAuthorVisibility() {
+
+    messageAuthorInput.hidden = Boolean(getSavedName());
+
+}
+
+updateChatAuthorVisibility();
+
 
 /*
     PUBLICATION D'UN PETIT MOT
@@ -69,6 +86,7 @@ messageForm.addEventListener("submit", async (event) => {
 
         messageForm.reset();
         prefillAuthorInputs();
+        updateChatAuthorVisibility();
 
         messageStatus.textContent =
             "Ton mot a été publié !";
