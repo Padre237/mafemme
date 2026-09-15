@@ -111,6 +111,41 @@ function timeAgo(date) {
 
 
 /*
+    LIBELLÉ DU GROUPE DE JOUR (Aujourd'hui, Hier, date...)
+*/
+
+function dayGroupLabel(date) {
+
+    if (!date) {
+        return "Plus tôt";
+    }
+
+    const startOfDay = d => new Date(d.getFullYear(), d.getMonth(), d.getDate());
+
+    const today = startOfDay(new Date());
+    const target = startOfDay(date);
+
+    const diffDays =
+        Math.round((today.getTime() - target.getTime()) / (24 * 60 * 60 * 1000));
+
+    if (diffDays === 0) {
+        return "Aujourd'hui";
+    }
+
+    if (diffDays === 1) {
+        return "Hier";
+    }
+
+    return target.toLocaleDateString("fr-FR", {
+        day: "numeric",
+        month: "long",
+        year: target.getFullYear() === today.getFullYear() ? undefined : "numeric"
+    });
+
+}
+
+
+/*
     FUSION DES TROIS SOURCES D'ACTIVITÉ
     (rendez-vous, galerie, petits mots)
 */
@@ -206,7 +241,25 @@ function renderActivite() {
 
     }
 
+    let currentGroup = null;
+
     items.slice(0, 30).forEach(item => {
+
+        const groupLabel = dayGroupLabel(item.createdAt);
+
+        if (groupLabel !== currentGroup) {
+
+            currentGroup = groupLabel;
+
+            const title =
+                document.createElement("p");
+
+            title.classList.add("activite-group-title");
+            title.textContent = groupLabel;
+
+            activiteFeed.appendChild(title);
+
+        }
 
         const row =
             document.createElement("div");

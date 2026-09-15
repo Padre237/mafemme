@@ -1945,10 +1945,6 @@ body.modal-open {
     box-shadow: 0 8px 20px rgba(57,22,28,.06);
 }
 
-.activite-item + .activite-item {
-    margin-top: 10px;
-}
-
 .activite-item svg {
     flex-shrink: 0;
 
@@ -1956,6 +1952,29 @@ body.modal-open {
     margin-top: 2px;
 
     color: var(--burgundy-light);
+}
+
+.activite-item-content {
+    flex: 1;
+    min-width: 0;
+
+    overflow-wrap: break-word;
+}
+
+.activite-group-title {
+    margin: 18px 4px 6px;
+
+    color: var(--text-light);
+
+    font-family: var(--serif);
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: .04em;
+}
+
+.activite-group-title:first-child {
+    margin-top: 4px;
 }
 
 .activite-item-content p {
