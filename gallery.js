@@ -27,6 +27,74 @@ const galerieEmpty =
 
 
 /*
+    COMPRESSION DES PHOTOS AVANT ENVOI
+
+    Réduit les photos (souvent 10-15 Mo depuis un
+    téléphone) à une taille raisonnable pour le web,
+    afin d'économiser le quota Cloudinary et d'accélérer
+    l'envoi. Les vidéos et GIF ne sont pas touchés.
+*/
+
+function compressImage(file, maxDimension = 1600, quality = 0.82) {
+
+    return new Promise(resolve => {
+
+        if (!file.type.startsWith("image") || file.type === "image/gif") {
+            resolve(file);
+            return;
+        }
+
+        const image = new Image();
+        const objectUrl = URL.createObjectURL(file);
+
+        image.onload = () => {
+
+            URL.revokeObjectURL(objectUrl);
+
+            let { width, height } = image;
+
+            if (width > maxDimension || height > maxDimension) {
+
+                const ratio =
+                    Math.min(maxDimension / width, maxDimension / height);
+
+                width = Math.round(width * ratio);
+                height = Math.round(height * ratio);
+
+            }
+
+            const canvas = document.createElement("canvas");
+
+            canvas.width = width;
+            canvas.height = height;
+
+            canvas.getContext("2d").drawImage(image, 0, 0, width, height);
+
+            canvas.toBlob(blob => {
+
+                resolve(
+                    blob
+                        ? new File([blob], file.name, { type: "image/jpeg" })
+                        : file
+                );
+
+            }, "image/jpeg", quality);
+
+        };
+
+        image.onerror = () => {
+            URL.revokeObjectURL(objectUrl);
+            resolve(file);
+        };
+
+        image.src = objectUrl;
+
+    });
+
+}
+
+
+/*
     ENVOI DU FICHIER VERS CLOUDINARY
 */
 
@@ -90,7 +158,9 @@ galerieForm.addEventListener("submit", async (event) => {
         const type =
             file.type.startsWith("video") ? "video" : "photo";
 
-        const uploadResult = await uploadToCloudinary(file);
+        const fileToUpload = await compressImage(file);
+
+        const uploadResult = await uploadToCloudinary(fileToUpload);
 
         await galerieCollection.add({
             url: uploadResult.secure_url,
@@ -116,7 +186,7 @@ galerieForm.addEventListener("submit", async (event) => {
         console.error(error);
 
         galerieStatus.textContent =
-            "Une erreur est survenue, réessaie.";
+            getSubmitErrorMessage();
 
         galerieStatus.classList.add("error");
 
@@ -158,6 +228,18 @@ galerieCollection
 
         galerieGrid.innerHTML = "";
 
+        const items =
+            snapshot.docs.map(doc => ({
+                id: doc.id,
+                ...doc.data(),
+                createdAt:
+                    doc.data().createdAt
+                        ? doc.data().createdAt.toDate()
+                        : null
+            }));
+
+        checkForNewContent(items, "galerie", "galerie");
+
         if (snapshot.empty) {
 
             galerieGrid.appendChild(galerieEmpty);
@@ -166,9 +248,7 @@ galerieCollection
 
         }
 
-        snapshot.forEach(doc => {
-
-            const item = doc.data();
+        items.forEach(item => {
 
             const card =
                 document.createElement("div");
@@ -189,6 +269,7 @@ galerieCollection
                             ? `<p>${escapeHtml(item.caption)}</p>`
                             : ""
                     }
+                    ${renderReactionButton("galerie", item.id, item.reactions)}
                 </div>
 
                 <button
@@ -203,8 +284,12 @@ galerieCollection
                 .querySelector(".galerie-delete")
                 .addEventListener(
                     "click",
-                    () => deleteGalerieItem(doc.id)
+                    () => deleteGalerieItem(item.id)
                 );
+
+            bindReactionButton(
+                card.querySelector(".reaction-button")
+            );
 
             galerieGrid.appendChild(card);
 

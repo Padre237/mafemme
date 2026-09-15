@@ -25,6 +25,33 @@
 
 
 /* =====================================================
+   MODE NUIT ROMANTIQUE
+===================================================== */
+
+:root[data-theme="night"] {
+    --cream: #1c1417;
+    --cream-dark: #251b1f;
+
+    --white: #2a1f23;
+    --text: #f1e6df;
+    --text-light: #c9aeae;
+
+    --burgundy-light: #d99a5b;
+    --rose: #e8bd8a;
+}
+
+:root[data-theme="night"] .counter-section {
+    background: #201619;
+}
+
+:root[data-theme="night"] .story-image img,
+:root[data-theme="night"] .galerie-card img,
+:root[data-theme="night"] .galerie-card video {
+    filter: brightness(.92);
+}
+
+
+/* =====================================================
    RESET
 ===================================================== */
 
@@ -45,7 +72,7 @@ body {
     overflow-x: hidden;
 
     opacity: 0;
-    transition: opacity .8s ease;
+    transition: opacity .8s ease, background-color .5s ease, color .5s ease;
 }
 
 body.page-loaded {
@@ -171,6 +198,99 @@ img {
 
 .menu-button svg {
     width: 22px;
+}
+
+.theme-toggle {
+    width: 38px;
+    height: 38px;
+
+    display: grid;
+    place-items: center;
+
+    margin-left: 10px;
+
+    color: white;
+    background: rgba(255,255,255,.12);
+
+    border-radius: 50%;
+
+    transition: var(--transition);
+}
+
+.theme-toggle:hover {
+    background: rgba(255,255,255,.24);
+}
+
+.theme-toggle svg {
+    width: 17px;
+}
+
+
+/* =====================================================
+   BANNIÈRE HORS-LIGNE
+===================================================== */
+
+.connection-banner {
+    position: fixed;
+    z-index: 2500;
+
+    top: 70px;
+    left: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+
+    width: 100%;
+    padding: 12px 20px;
+
+    color: white;
+    background: var(--burgundy-dark);
+
+    font-size: 13px;
+    text-align: center;
+}
+
+.connection-banner svg {
+    width: 16px;
+    flex-shrink: 0;
+}
+
+
+/* =====================================================
+   RÉACTIONS RAPIDES
+===================================================== */
+
+.reaction-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+
+    margin-top: 10px;
+    padding: 6px 13px;
+
+    color: var(--text-light);
+    background: var(--cream);
+
+    border-radius: 100px;
+
+    font-size: 13px;
+
+    transition: var(--transition);
+}
+
+.reaction-button svg {
+    width: 14px;
+}
+
+.reaction-button.reacted {
+    color: white;
+    background: var(--burgundy-light);
+}
+
+.reaction-button.reacted svg {
+    fill: currentColor;
 }
 
 
@@ -1402,10 +1522,22 @@ body.modal-open {
     background: var(--burgundy-light);
 }
 
+.rendezvous-card-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+
+    margin-top: 12px;
+}
+
+.rendezvous-card-actions .reaction-button {
+    margin-top: 0;
+}
+
 .rendezvous-confirm {
     align-self: flex-start;
 
-    margin-top: 12px;
     padding: 8px 16px;
 
     color: var(--burgundy-light);
@@ -2222,6 +2354,8 @@ footer p {
     }
 
     .navigation a {
+        position: relative;
+
         color: rgba(255,255,255,.7);
 
         font-size: 12px;
@@ -2231,6 +2365,19 @@ footer p {
 
     .navigation a:hover {
         color: white;
+    }
+
+    .nav-dot {
+        position: absolute;
+        top: -2px;
+        right: -9px;
+
+        width: 6px;
+        height: 6px;
+
+        background: var(--rose);
+
+        border-radius: 50%;
     }
 
     .header-button {

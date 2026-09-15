@@ -59,7 +59,7 @@ messageForm.addEventListener("submit", async (event) => {
         console.error(error);
 
         messageStatus.textContent =
-            "Une erreur est survenue, réessaie.";
+            getSubmitErrorMessage();
 
         messageStatus.classList.add("error");
 
@@ -141,7 +141,10 @@ function renderActivite() {
 
         ...activiteState.rendezvous.map(rendezvous => ({
             type: "rendezvous",
+            collection: "rendezvous",
+            id: rendezvous.id,
             createdAt: rendezvous.createdAt,
+            reactions: rendezvous.reactions,
             html:
                 `${escapeHtml(rendezvous.author) || "Quelqu'un"} ` +
                 `a proposé un rendez-vous le ` +
@@ -155,7 +158,10 @@ function renderActivite() {
 
         ...activiteState.galerie.map(item => ({
             type: "galerie",
+            collection: "galerie",
+            id: item.id,
             createdAt: item.createdAt,
+            reactions: item.reactions,
             html:
                 `${escapeHtml(item.author) || "Quelqu'un"} a ajouté ` +
                 `${item.type === "video" ? "une vidéo" : "une photo"}` +
@@ -168,7 +174,10 @@ function renderActivite() {
 
         ...activiteState.messages.map(message => ({
             type: "message",
+            collection: "messages",
+            id: message.id,
             createdAt: message.createdAt,
+            reactions: message.reactions,
             html:
                 `${escapeHtml(message.author) || "Quelqu'un"} a laissé ` +
                 `un mot : "${escapeHtml(message.text)}"`
@@ -184,6 +193,8 @@ function renderActivite() {
         return timeB - timeA;
 
     });
+
+    checkForNewContent(items, "activite", "activite");
 
     activiteFeed.innerHTML = "";
 
@@ -207,8 +218,13 @@ function renderActivite() {
             <div class="activite-item-content">
                 <p>${item.html}</p>
                 <span>${timeAgo(item.createdAt)}</span>
+                ${renderReactionButton(item.collection, item.id, item.reactions)}
             </div>
         `;
+
+        bindReactionButton(
+            row.querySelector(".reaction-button")
+        );
 
         activiteFeed.appendChild(row);
 
@@ -224,6 +240,7 @@ rendezvousCollection.onSnapshot(snapshot => {
 
     activiteState.rendezvous =
         snapshot.docs.map(doc => ({
+            id: doc.id,
             ...doc.data(),
             createdAt: toJsDate(doc.data().createdAt)
         }));
@@ -236,6 +253,7 @@ galerieCollection.onSnapshot(snapshot => {
 
     activiteState.galerie =
         snapshot.docs.map(doc => ({
+            id: doc.id,
             ...doc.data(),
             createdAt: toJsDate(doc.data().createdAt)
         }));
@@ -248,6 +266,7 @@ messagesCollection.onSnapshot(snapshot => {
 
     activiteState.messages =
         snapshot.docs.map(doc => ({
+            id: doc.id,
             ...doc.data(),
             createdAt: toJsDate(doc.data().createdAt)
         }));

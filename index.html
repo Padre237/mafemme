@@ -62,11 +62,26 @@
             <span>Pour toi</span>
         </a>
 
+        <button class="theme-toggle" id="themeToggle" aria-label="Basculer le mode nuit">
+            <i data-lucide="moon"></i>
+        </button>
+
         <button class="menu-button" id="menuButton" aria-label="Ouvrir le menu">
             <i data-lucide="menu"></i>
         </button>
 
     </header>
+
+
+    <!-- ================= BANNIÈRE HORS LIGNE ================= -->
+
+    <div class="connection-banner" id="connectionBanner" hidden>
+        <i data-lucide="wifi-off"></i>
+        <span>
+            Connexion perdue — tes ajouts seront à retenter
+            une fois la connexion revenue.
+        </span>
+    </div>
 
 
     <main>
@@ -765,6 +780,10 @@
     <script src="cloudinary-config.js"></script>
     <script src="identity.js"></script>
     <script src="modals.js"></script>
+    <script src="connection.js"></script>
+    <script src="theme.js"></script>
+    <script src="notifications.js"></script>
+    <script src="reactions.js"></script>
     <script src="rendezvous.js"></script>
     <script src="gallery.js"></script>
     <script src="activite.js"></script>

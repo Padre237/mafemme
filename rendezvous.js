@@ -134,7 +134,7 @@ rendezvousForm.addEventListener("submit", async (event) => {
         console.error(error);
 
         rendezvousStatus.textContent =
-            "Une erreur est survenue, réessaie.";
+            getSubmitErrorMessage();
 
         rendezvousStatus.classList.add("error");
 
@@ -320,13 +320,20 @@ rendezvousCollection
                     <em class="rendezvous-author">
                         Proposé par ${escapeHtml(rendezvous.author) || "quelqu'un"}
                     </em>
-                    <button class="rendezvous-confirm ${rendezvous.confirmed ? "is-confirmed" : ""}">
-                        ${
-                            rendezvous.confirmed
-                                ? "Annuler la confirmation"
-                                : "Je confirme 💕"
-                        }
-                    </button>
+                    <div class="rendezvous-card-actions">
+                        <button class="rendezvous-confirm ${rendezvous.confirmed ? "is-confirmed" : ""}">
+                            ${
+                                rendezvous.confirmed
+                                    ? "Annuler la confirmation"
+                                    : "Je confirme 💕"
+                            }
+                        </button>
+                        ${renderReactionButton(
+                            "rendezvous",
+                            rendezvous.id,
+                            rendezvous.reactions
+                        )}
+                    </div>
                 </div>
 
                 <button
@@ -353,6 +360,10 @@ rendezvousCollection
                         rendezvous.confirmed
                     )
                 );
+
+            bindReactionButton(
+                card.querySelector(".reaction-button")
+            );
 
             rendezvousList.appendChild(card);
 
