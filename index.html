@@ -734,24 +734,16 @@
                 </div>
 
                 <div class="editor-frame" id="editorFrame">
-                    <img id="editorImage" alt="Aperçu du recadrage" draggable="false">
+                    <img id="editorImage" alt="Aperçu" draggable="false">
                 </div>
 
-                <p class="editor-hint">Glisse la photo pour la repositionner.</p>
+                <p class="editor-hint">La photo s'adapte automatiquement à l'emplacement choisi.</p>
 
                 <div class="editor-controls">
 
-                    <label class="editor-zoom">
-                        <i data-lucide="zoom-in"></i>
-                        <input type="range" id="editorZoom" min="1" max="3" step="0.01" value="1">
-                    </label>
-
                     <button type="button" class="editor-tool" id="editorRotate" aria-label="Tourner">
                         <i data-lucide="rotate-cw"></i>
-                    </button>
-
-                    <button type="button" class="editor-tool" id="editorReset" aria-label="Réinitialiser">
-                        <i data-lucide="refresh-ccw"></i>
+                        <span>Tourner</span>
                     </button>
 
                 </div>

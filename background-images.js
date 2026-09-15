@@ -1,9 +1,10 @@
 /* =====================================================
    IMAGES DE FOND PARTAGÉES (HERO + NOTRE HISTOIRE)
 
-   Chaque emplacement garde une photo et un réglage de
-   recadrage (zoom, position, rotation), stockés dans
-   Firestore et modifiables depuis la galerie.
+   Chaque emplacement garde une photo et une rotation
+   éventuelle, stockées dans Firestore et modifiables
+   depuis la galerie. L'image s'adapte toujours
+   automatiquement à la section (comme un fond "cover").
 ===================================================== */
 
 const backgroundSettingsCollection = db.collection("settings");
@@ -13,17 +14,11 @@ const DEFAULT_BACKGROUNDS = {
     hero: {
         imageUrl:
             "https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?auto=format&fit=crop&w=1800&q=90",
-        scale: 1,
-        offsetX: 0,
-        offsetY: 0,
         rotation: 0
     },
 
     histoire: {
         imageUrl: "mafemme.jpg",
-        scale: 1,
-        offsetX: 0,
-        offsetY: 0,
         rotation: 0
     }
 
@@ -50,8 +45,9 @@ const currentBackgrounds = {
 
 
 /*
-    APPLIQUE UN RÉGLAGE DE RECADRAGE SUR UNE IMAGE
-    (utilisé pour les vraies sections ET l'aperçu de l'éditeur)
+    APPLIQUE UNE IMAGE (+ ROTATION ÉVENTUELLE) EN MODE
+    "COVER" AUTOMATIQUE — utilisé pour les vraies sections
+    ET l'aperçu de l'éditeur
 */
 
 function applyCrop(imgEl, containerEl, crop) {
@@ -60,12 +56,14 @@ function applyCrop(imgEl, containerEl, crop) {
         return;
     }
 
+    const rotation = crop.rotation || 0;
+
     const render = () => {
 
         const containerWidth = containerEl.clientWidth;
         const containerHeight = containerEl.clientHeight;
 
-        const rotated = (crop.rotation % 180) !== 0;
+        const rotated = (rotation % 180) !== 0;
 
         const naturalWidth =
             rotated ? imgEl.naturalHeight : imgEl.naturalWidth;
@@ -77,22 +75,14 @@ function applyCrop(imgEl, containerEl, crop) {
             return;
         }
 
-        const baseScale =
+        const scale =
             Math.max(
                 containerWidth / naturalWidth,
                 containerHeight / naturalHeight
             );
 
-        const finalScale = baseScale * (crop.scale || 1);
-
-        const offsetXpx = (crop.offsetX || 0) * containerWidth;
-        const offsetYpx = (crop.offsetY || 0) * containerHeight;
-
         imgEl.style.transform =
-            `translate(-50%, -50%) ` +
-            `translate(${offsetXpx}px, ${offsetYpx}px) ` +
-            `rotate(${crop.rotation || 0}deg) ` +
-            `scale(${finalScale})`;
+            `translate(-50%, -50%) rotate(${rotation}deg) scale(${scale})`;
 
     };
 

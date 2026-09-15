@@ -1,8 +1,10 @@
 /* =====================================================
-   ÉDITEUR D'IMAGE (RECADRAGE, ZOOM, ROTATION)
+   ÉDITEUR D'IMAGE (ROTATION)
 
    Ouvert depuis une photo de la galerie pour la placer
    en fond du Hero ou de la section Notre histoire.
+   L'image s'adapte toujours automatiquement à la section
+   (comme un fond "cover") ; seule la rotation est réglable.
 ===================================================== */
 
 const imageEditorModal =
@@ -14,14 +16,8 @@ const editorFrame =
 const editorImage =
     document.getElementById("editorImage");
 
-const editorZoom =
-    document.getElementById("editorZoom");
-
 const editorRotateButton =
     document.getElementById("editorRotate");
-
-const editorResetButton =
-    document.getElementById("editorReset");
 
 const editorValidateButton =
     document.getElementById("editorValidate");
@@ -40,9 +36,6 @@ function resetEditorState(imageUrl) {
     editorState = {
         imageUrl,
         target: "hero",
-        scale: 1,
-        offsetX: 0,
-        offsetY: 0,
         rotation: 0
     };
 
@@ -56,8 +49,6 @@ function renderEditorPreview() {
     );
 
     applyCrop(editorImage, editorFrame, editorState);
-
-    editorZoom.value = editorState.scale;
 
 }
 
@@ -110,84 +101,14 @@ editorTargetPills
 
 
 /*
-    ZOOM, ROTATION, RÉINITIALISATION
+    ROTATION
 */
-
-editorZoom.addEventListener("input", () => {
-
-    editorState.scale = parseFloat(editorZoom.value);
-
-    renderEditorPreview();
-
-});
 
 editorRotateButton.addEventListener("click", () => {
 
     editorState.rotation = (editorState.rotation + 90) % 360;
 
     renderEditorPreview();
-
-});
-
-editorResetButton.addEventListener("click", () => {
-
-    editorState.scale = 1;
-    editorState.offsetX = 0;
-    editorState.offsetY = 0;
-    editorState.rotation = 0;
-
-    renderEditorPreview();
-
-});
-
-
-/*
-    GLISSER POUR REPOSITIONNER LA PHOTO
-*/
-
-let editorDragging = false;
-let editorDragStartX = 0;
-let editorDragStartY = 0;
-let editorDragStartOffsetX = 0;
-let editorDragStartOffsetY = 0;
-
-editorFrame.addEventListener("pointerdown", (event) => {
-
-    editorDragging = true;
-
-    editorDragStartX = event.clientX;
-    editorDragStartY = event.clientY;
-    editorDragStartOffsetX = editorState.offsetX;
-    editorDragStartOffsetY = editorState.offsetY;
-
-    editorFrame.setPointerCapture(event.pointerId);
-
-});
-
-editorFrame.addEventListener("pointermove", (event) => {
-
-    if (!editorDragging) {
-        return;
-    }
-
-    const deltaX = event.clientX - editorDragStartX;
-    const deltaY = event.clientY - editorDragStartY;
-
-    editorState.offsetX =
-        editorDragStartOffsetX + deltaX / editorFrame.clientWidth;
-
-    editorState.offsetY =
-        editorDragStartOffsetY + deltaY / editorFrame.clientHeight;
-
-    applyCrop(editorImage, editorFrame, editorState);
-
-});
-
-["pointerup", "pointercancel", "pointerleave"].forEach(eventName => {
-
-    editorFrame.addEventListener(eventName, () => {
-        editorDragging = false;
-    });
 
 });
 
@@ -206,9 +127,6 @@ editorValidateButton.addEventListener("click", async () => {
 
         await saveBackgroundCrop(editorState.target, {
             imageUrl: editorState.imageUrl,
-            scale: editorState.scale,
-            offsetX: editorState.offsetX,
-            offsetY: editorState.offsetY,
             rotation: editorState.rotation
         });
 

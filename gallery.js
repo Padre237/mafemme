@@ -267,7 +267,47 @@ galerieCollection
                     : `<img src="${item.url}" alt="Souvenir ajouté par ${escapeHtml(item.author)}">`;
 
             card.innerHTML = `
-                ${media}
+                <div class="galerie-media">
+
+                    ${media}
+
+                    ${
+                        isPhoto
+                            ? `
+                                <button
+                                    class="galerie-set-hero ${
+                                        (isBackgroundImage("hero", item.url) || isBackgroundImage("histoire", item.url))
+                                            ? "active"
+                                            : ""
+                                    }"
+                                    aria-label="Utiliser comme image de fond"
+                                >
+                                    <i data-lucide="image"></i>
+                                </button>
+
+                                <div class="hero-badges">
+                                    <span class="hero-current-badge" data-badge-target="hero" ${isBackgroundImage("hero", item.url) ? "" : "hidden"}>
+                                        <i data-lucide="check"></i>
+                                        Fond du Hero
+                                    </span>
+                                    <span class="hero-current-badge" data-badge-target="histoire" ${isBackgroundImage("histoire", item.url) ? "" : "hidden"}>
+                                        <i data-lucide="check"></i>
+                                        Notre histoire
+                                    </span>
+                                </div>
+                            `
+                            : ""
+                    }
+
+                    <button
+                        class="galerie-delete"
+                        aria-label="Supprimer ce souvenir"
+                    >
+                        <i data-lucide="trash-2"></i>
+                    </button>
+
+                </div>
+
                 <div class="galerie-card-info">
                     <strong>${escapeHtml(item.author) || "Quelqu'un"}</strong>
                     ${
@@ -278,41 +318,6 @@ galerieCollection
                     ${renderEmojiBar("galerie", item.id, item.emojiReactions)}
                     ${renderCommentsSection()}
                 </div>
-
-                ${
-                    isPhoto
-                        ? `
-                            <button
-                                class="galerie-set-hero ${
-                                    (isBackgroundImage("hero", item.url) || isBackgroundImage("histoire", item.url))
-                                        ? "active"
-                                        : ""
-                                }"
-                                aria-label="Utiliser comme image de fond"
-                            >
-                                <i data-lucide="image"></i>
-                            </button>
-
-                            <div class="hero-badges">
-                                <span class="hero-current-badge" data-badge-target="hero" ${isBackgroundImage("hero", item.url) ? "" : "hidden"}>
-                                    <i data-lucide="check"></i>
-                                    Fond du Hero
-                                </span>
-                                <span class="hero-current-badge" data-badge-target="histoire" ${isBackgroundImage("histoire", item.url) ? "" : "hidden"}>
-                                    <i data-lucide="check"></i>
-                                    Notre histoire
-                                </span>
-                            </div>
-                        `
-                        : ""
-                }
-
-                <button
-                    class="galerie-delete"
-                    aria-label="Supprimer ce souvenir"
-                >
-                    <i data-lucide="trash-2"></i>
-                </button>
             `;
 
             card
