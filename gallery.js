@@ -109,6 +109,8 @@ galerieForm.addEventListener("submit", async (event) => {
         galerieStatus.textContent =
             "Ajouté à la galerie !";
 
+        closeModal(document.getElementById("galerieModal"));
+
     } catch (error) {
 
         console.error(error);

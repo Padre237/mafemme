@@ -52,6 +52,8 @@ messageForm.addEventListener("submit", async (event) => {
         messageStatus.textContent =
             "Ton mot a été publié !";
 
+        closeModal(document.getElementById("messageModal"));
+
     } catch (error) {
 
         console.error(error);

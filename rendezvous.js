@@ -104,6 +104,8 @@ rendezvousForm.addEventListener("submit", async (event) => {
         rendezvousStatus.textContent =
             "Ta proposition a bien été envoyée !";
 
+        closeModal(document.getElementById("rendezvousModal"));
+
         if (!rendezvousList.classList.contains("open")) {
             rendezvousToggle.click();
         }

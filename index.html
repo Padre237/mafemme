@@ -358,6 +358,50 @@
 
             <div class="rendezvous-wrapper reveal">
 
+                <div class="section-actions">
+
+                    <button class="open-form-button" data-modal-target="rendezvousModal">
+                        <i data-lucide="calendar-plus"></i>
+                        <span>Proposer un moment</span>
+                    </button>
+
+                    <button class="rendezvous-toggle" id="rendezvousToggle">
+                        <i data-lucide="calendar-heart"></i>
+                        <span>Voir les rendez-vous programmés</span>
+                        <span class="rendezvous-count" id="rendezvousCount">0</span>
+                        <i data-lucide="chevron-down" class="rendezvous-chevron"></i>
+                    </button>
+
+                </div>
+
+                <div class="rendezvous-list" id="rendezvousList">
+                    <p class="rendezvous-empty" id="rendezvousEmpty">
+                        Aucun rendez-vous programmé pour l'instant.
+                    </p>
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ================= MODALE RENDEZ-VOUS ================= -->
+
+        <div class="form-modal" id="rendezvousModal">
+
+            <div class="form-modal-card">
+
+                <button class="form-modal-close" aria-label="Fermer">
+                    <i data-lucide="x"></i>
+                </button>
+
+                <p class="form-modal-eyebrow">Un moment à toi</p>
+
+                <h3 class="form-modal-title">
+                    Propose
+                    <em>un rendez-vous</em>
+                </h3>
+
                 <form class="rendezvous-form" id="rendezvousForm">
 
                     <label>
@@ -413,22 +457,9 @@
 
                 </form>
 
-                <button class="rendezvous-toggle" id="rendezvousToggle">
-                    <i data-lucide="calendar-heart"></i>
-                    <span>Voir les rendez-vous programmés</span>
-                    <span class="rendezvous-count" id="rendezvousCount">0</span>
-                    <i data-lucide="chevron-down" class="rendezvous-chevron"></i>
-                </button>
-
-                <div class="rendezvous-list" id="rendezvousList">
-                    <p class="rendezvous-empty" id="rendezvousEmpty">
-                        Aucun rendez-vous programmé pour l'instant.
-                    </p>
-                </div>
-
             </div>
 
-        </section>
+        </div>
 
 
         <!-- ================= GALERIE ================= -->
@@ -452,6 +483,43 @@
             </div>
 
             <div class="galerie-wrapper reveal">
+
+                <div class="section-actions">
+
+                    <button class="open-form-button" data-modal-target="galerieModal">
+                        <i data-lucide="image-plus"></i>
+                        <span>Ajouter un souvenir</span>
+                    </button>
+
+                </div>
+
+                <div class="galerie-grid" id="galerieGrid">
+                    <p class="galerie-empty" id="galerieEmpty">
+                        Aucun souvenir ajouté pour l'instant.
+                    </p>
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ================= MODALE GALERIE ================= -->
+
+        <div class="form-modal" id="galerieModal">
+
+            <div class="form-modal-card">
+
+                <button class="form-modal-close" aria-label="Fermer">
+                    <i data-lucide="x"></i>
+                </button>
+
+                <p class="form-modal-eyebrow">Un souvenir de plus</p>
+
+                <h3 class="form-modal-title">
+                    Ajoute
+                    <em>à la galerie</em>
+                </h3>
 
                 <form class="galerie-form" id="galerieForm">
 
@@ -494,15 +562,9 @@
 
                 </form>
 
-                <div class="galerie-grid" id="galerieGrid">
-                    <p class="galerie-empty" id="galerieEmpty">
-                        Aucun souvenir ajouté pour l'instant.
-                    </p>
-                </div>
-
             </div>
 
-        </section>
+        </div>
 
 
         <!-- ================= ACTIVITÉ ================= -->
@@ -525,6 +587,44 @@
             </div>
 
             <div class="activite-wrapper reveal">
+
+                <div class="section-actions">
+
+                    <button class="open-form-button" data-modal-target="messageModal">
+                        <i data-lucide="message-circle-heart"></i>
+                        <span>Laisser un mot</span>
+                    </button>
+
+                </div>
+
+                <div class="activite-feed" id="activiteFeed">
+                    <p class="activite-empty" id="activiteEmpty">
+                        Rien pour l'instant — soyez les premiers
+                        à ajouter quelque chose !
+                    </p>
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ================= MODALE PETIT MOT ================= -->
+
+        <div class="form-modal" id="messageModal">
+
+            <div class="form-modal-card">
+
+                <button class="form-modal-close" aria-label="Fermer">
+                    <i data-lucide="x"></i>
+                </button>
+
+                <p class="form-modal-eyebrow">Juste pour toi</p>
+
+                <h3 class="form-modal-title">
+                    Laisse
+                    <em>un petit mot</em>
+                </h3>
 
                 <form class="activite-form" id="messageForm">
 
@@ -558,16 +658,9 @@
 
                 </form>
 
-                <div class="activite-feed" id="activiteFeed">
-                    <p class="activite-empty" id="activiteEmpty">
-                        Rien pour l'instant — soyez les premiers
-                        à ajouter quelque chose !
-                    </p>
-                </div>
-
             </div>
 
-        </section>
+        </div>
 
 
         <!-- ================= FINAL ================= -->
@@ -629,6 +722,7 @@
     <script src="firebase-config.js"></script>
     <script src="cloudinary-config.js"></script>
     <script src="identity.js"></script>
+    <script src="modals.js"></script>
     <script src="rendezvous.js"></script>
     <script src="gallery.js"></script>
     <script src="activite.js"></script>
