@@ -87,6 +87,7 @@ rendezvousForm.addEventListener("submit", async (event) => {
         await rendezvousCollection.add({
             date,
             time,
+            datetime: `${date}T${time}`,
             lieu,
             message,
             createdAt:
@@ -140,8 +141,7 @@ function deleteRendezvous(id) {
 */
 
 rendezvousCollection
-    .orderBy("date", "asc")
-    .orderBy("time", "asc")
+    .orderBy("datetime", "asc")
     .onSnapshot(snapshot => {
 
         rendezvousCount.textContent = snapshot.size;
