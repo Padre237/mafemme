@@ -17,6 +17,9 @@ const rendezvousToggle =
 const rendezvousList =
     document.getElementById("rendezvousList");
 
+const rendezvousToggleLabel =
+    document.getElementById("rendezvousToggleLabel");
+
 const rendezvousEmpty =
     document.getElementById("rendezvousEmpty");
 
@@ -50,8 +53,13 @@ const rdvCountPlace =
 
 rendezvousToggle.addEventListener("click", () => {
 
-    rendezvousList.classList.toggle("open");
-    rendezvousToggle.classList.toggle("open");
+    const nowOpen =
+        rendezvousList.classList.toggle("open");
+
+    rendezvousToggle.classList.toggle("open", nowOpen);
+
+    rendezvousToggleLabel.textContent =
+        nowOpen ? "Voir moins de rendez-vous" : "Voir plus de rendez-vous";
 
 });
 

@@ -37,6 +37,12 @@ const galeriePeriodFilter =
 const galerieLoadMore =
     document.getElementById("galerieLoadMore");
 
+const galerieLoadMoreLabel =
+    document.getElementById("galerieLoadMoreLabel");
+
+const galerieLoadMoreIcon =
+    document.getElementById("galerieLoadMoreIcon");
+
 const GALERIE_PAGE_SIZE = 3;
 
 let allGalerieItems = [];
@@ -485,7 +491,17 @@ galeriePeriodFilter.addEventListener("change", () => {
 
 galerieLoadMore.addEventListener("click", () => {
 
-    galerieVisibleCount += GALERIE_PAGE_SIZE;
+    const filteredCount = getFilteredGalerieItems().length;
+
+    if (galerieVisibleCount >= filteredCount) {
+
+        galerieVisibleCount = GALERIE_PAGE_SIZE;
+
+    } else {
+
+        galerieVisibleCount += GALERIE_PAGE_SIZE;
+
+    }
 
     renderGalerieGrid();
 
@@ -522,7 +538,17 @@ function renderGalerieGrid() {
             galerieGrid.appendChild(buildGalerieCard(item));
         });
 
-    galerieLoadMore.hidden = galerieVisibleCount >= filtered.length;
+    const fullyExpanded = galerieVisibleCount >= filtered.length;
+
+    galerieLoadMore.hidden = filtered.length <= GALERIE_PAGE_SIZE;
+
+    galerieLoadMoreLabel.textContent =
+        fullyExpanded ? "Voir moins de souvenirs" : "Voir plus de souvenirs";
+
+    galerieLoadMoreIcon.setAttribute(
+        "data-lucide",
+        fullyExpanded ? "chevron-up" : "chevron-down"
+    );
 
     if (window.lucide) {
         lucide.createIcons();
