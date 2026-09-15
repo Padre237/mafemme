@@ -255,6 +255,12 @@ galerieCollection
 
             card.classList.add("galerie-card");
 
+            const isPhoto = item.type !== "video";
+
+            if (isPhoto) {
+                card.dataset.url = item.url;
+            }
+
             const media =
                 item.type === "video"
                     ? `<video src="${item.url}" controls></video>`
@@ -273,6 +279,24 @@ galerieCollection
                     ${renderCommentsSection()}
                 </div>
 
+                ${
+                    isPhoto
+                        ? `
+                            <button
+                                class="galerie-set-hero ${isCurrentHeroImage(item.url) ? "active" : ""}"
+                                aria-label="Définir comme image de fond"
+                            >
+                                <i data-lucide="image"></i>
+                            </button>
+
+                            <span class="hero-current-badge">
+                                <i data-lucide="check"></i>
+                                Image actuelle
+                            </span>
+                        `
+                        : ""
+                }
+
                 <button
                     class="galerie-delete"
                     aria-label="Supprimer ce souvenir"
@@ -281,12 +305,28 @@ galerieCollection
                 </button>
             `;
 
+            if (isPhoto && isCurrentHeroImage(item.url)) {
+                card.classList.add("hero-current");
+            }
+
             card
                 .querySelector(".galerie-delete")
                 .addEventListener(
                     "click",
                     () => deleteGalerieItem(item.id)
                 );
+
+            const setHeroButton =
+                card.querySelector(".galerie-set-hero");
+
+            if (setHeroButton) {
+
+                setHeroButton.addEventListener(
+                    "click",
+                    () => setAsHeroBackground(item.url)
+                );
+
+            }
 
             bindEmojiBar(
                 card.querySelector(".emoji-bar")

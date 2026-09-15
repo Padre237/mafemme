@@ -1804,6 +1804,66 @@ body.modal-open {
     width: 14px;
 }
 
+.galerie-set-hero {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+
+    display: grid;
+    place-items: center;
+
+    width: 32px;
+    height: 32px;
+
+    color: white;
+    background: rgba(17,12,14,.5);
+    backdrop-filter: blur(4px);
+
+    border-radius: 50%;
+
+    transition: var(--transition);
+}
+
+.galerie-set-hero:hover {
+    background: var(--burgundy-light);
+}
+
+.galerie-set-hero.active {
+    background: var(--burgundy-light);
+}
+
+.galerie-set-hero svg {
+    width: 14px;
+}
+
+.hero-current-badge {
+    display: none;
+    align-items: center;
+    gap: 5px;
+
+    position: absolute;
+    left: 10px;
+    bottom: 10px;
+
+    padding: 5px 11px;
+
+    color: white;
+    background: var(--burgundy-light);
+
+    border-radius: 100px;
+
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.hero-current-badge svg {
+    width: 12px;
+}
+
+.galerie-card.hero-current .hero-current-badge {
+    display: inline-flex;
+}
+
 
 /* =====================================================
    ACTIVITÉ
