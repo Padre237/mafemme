@@ -185,6 +185,12 @@ img {
     display: none;
 }
 
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
 .menu-button {
     width: 40px;
     height: 40px;
@@ -206,8 +212,6 @@ img {
 
     display: grid;
     place-items: center;
-
-    margin-left: 10px;
 
     color: white;
     background: rgba(255,255,255,.12);
