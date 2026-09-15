@@ -518,6 +518,13 @@ galerieLoadMore.addEventListener("click", () => {
 
 let galerieRenderPending = false;
 
+const galerieMobileQuery =
+    window.matchMedia("(max-width: 699px)");
+
+function isGalerieMobile() {
+    return galerieMobileQuery.matches;
+}
+
 function renderGalerieGrid() {
 
     if (isTypingInComments(galerieGrid)) {
@@ -545,29 +552,42 @@ function renderGalerieGrid() {
 
     }
 
-    filtered
-        .slice(0, galerieVisibleCount)
-        .forEach(item => {
-            galerieGrid.appendChild(buildGalerieCard(item));
-        });
+    const mobile = isGalerieMobile();
 
-    const fullyExpanded = galerieVisibleCount >= filtered.length;
+    const visibleItems =
+        mobile ? filtered : filtered.slice(0, galerieVisibleCount);
 
-    galerieLoadMore.hidden = filtered.length <= GALERIE_PAGE_SIZE;
+    visibleItems.forEach(item => {
+        galerieGrid.appendChild(buildGalerieCard(item));
+    });
 
-    galerieLoadMoreLabel.textContent =
-        fullyExpanded ? "Voir moins de souvenirs" : "Voir plus de souvenirs";
+    if (mobile) {
 
-    galerieLoadMoreIcon.setAttribute(
-        "data-lucide",
-        fullyExpanded ? "chevron-up" : "chevron-down"
-    );
+        galerieLoadMore.hidden = true;
+
+    } else {
+
+        const fullyExpanded = galerieVisibleCount >= filtered.length;
+
+        galerieLoadMore.hidden = filtered.length <= GALERIE_PAGE_SIZE;
+
+        galerieLoadMoreLabel.textContent =
+            fullyExpanded ? "Voir moins de souvenirs" : "Voir plus de souvenirs";
+
+        galerieLoadMoreIcon.setAttribute(
+            "data-lucide",
+            fullyExpanded ? "chevron-up" : "chevron-down"
+        );
+
+    }
 
     if (window.lucide) {
         lucide.createIcons();
     }
 
 }
+
+galerieMobileQuery.addEventListener("change", renderGalerieGrid);
 
 galerieGrid.addEventListener("focusout", () => {
 

@@ -1754,10 +1754,24 @@ body.modal-open {
 }
 
 .galerie-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-    align-items: start;
-    gap: 18px;
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+
+    padding-bottom: 6px;
+}
+
+.galerie-grid .galerie-card {
+    flex: 0 0 86%;
+    scroll-snap-align: center;
+}
+
+.galerie-grid .galerie-empty {
+    flex: 1;
 }
 
 .galerie-empty {
@@ -3139,6 +3153,22 @@ footer p {
 
     .form-row {
         grid-template-columns: 1fr 1fr;
+    }
+
+    .galerie-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+        align-items: start;
+
+        overflow-x: visible;
+        scroll-snap-type: none;
+
+        padding-bottom: 0;
+    }
+
+    .galerie-grid .galerie-card {
+        flex: initial;
+        scroll-snap-align: none;
     }
 
     .header {
