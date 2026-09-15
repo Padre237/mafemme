@@ -70,6 +70,7 @@ rendezvousForm.addEventListener("submit", async (event) => {
 
     event.preventDefault();
 
+    const author = document.getElementById("rdvAuthor").value.trim();
     const date = document.getElementById("rdvDate").value;
     const time = document.getElementById("rdvTime").value;
     const lieu = document.getElementById("rdvLieu").value.trim();
@@ -85,6 +86,7 @@ rendezvousForm.addEventListener("submit", async (event) => {
     try {
 
         await rendezvousCollection.add({
+            author,
             date,
             time,
             datetime: `${date}T${time}`,
@@ -94,7 +96,10 @@ rendezvousForm.addEventListener("submit", async (event) => {
                 firebase.firestore.FieldValue.serverTimestamp()
         });
 
+        saveName(author);
+
         rendezvousForm.reset();
+        prefillAuthorInputs();
 
         rendezvousStatus.textContent =
             "Ta proposition a bien été envoyée !";
@@ -175,13 +180,16 @@ rendezvousCollection
                     </strong>
                     <span>
                         <i data-lucide="map-pin"></i>
-                        ${rendezvous.lieu}
+                        ${escapeHtml(rendezvous.lieu)}
                     </span>
                     ${
                         rendezvous.message
-                            ? `<p>${rendezvous.message}</p>`
+                            ? `<p>${escapeHtml(rendezvous.message)}</p>`
                             : ""
                     }
+                    <em class="rendezvous-author">
+                        Proposé par ${escapeHtml(rendezvous.author) || "quelqu'un"}
+                    </em>
                 </div>
 
                 <button

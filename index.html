@@ -45,6 +45,8 @@
             <a href="#compteur">Notre temps</a>
             <a href="#lettre">Ma lettre</a>
             <a href="#rendezvous">Rendez-vous</a>
+            <a href="#galerie">Galerie</a>
+            <a href="#activite">Activité</a>
         </nav>
 
         <a href="#lettre" class="header-button">
@@ -358,6 +360,17 @@
 
                 <form class="rendezvous-form" id="rendezvousForm">
 
+                    <label>
+                        <span>Ton prénom</span>
+                        <input
+                            type="text"
+                            id="rdvAuthor"
+                            class="author-name-input"
+                            placeholder="Ton prénom"
+                            required
+                        >
+                    </label>
+
                     <div class="form-row">
 
                         <label>
@@ -418,6 +431,145 @@
         </section>
 
 
+        <!-- ================= GALERIE ================= -->
+
+        <section class="galerie-section section" id="galerie">
+
+            <div class="galerie-introduction reveal">
+
+                <p class="section-label">NOS SOUVENIRS</p>
+
+                <h2>
+                    Notre
+                    <em>galerie.</em>
+                </h2>
+
+                <p>
+                    Chacun peut ajouter ses photos et vidéos préférées,
+                    pour garder une trace de chaque moment partagé.
+                </p>
+
+            </div>
+
+            <div class="galerie-wrapper reveal">
+
+                <form class="galerie-form" id="galerieForm">
+
+                    <label>
+                        <span>Ton prénom</span>
+                        <input
+                            type="text"
+                            id="galerieAuthor"
+                            class="author-name-input"
+                            placeholder="Ton prénom"
+                            required
+                        >
+                    </label>
+
+                    <label>
+                        <span>Photo ou vidéo</span>
+                        <input
+                            type="file"
+                            id="galerieFile"
+                            accept="image/*,video/*"
+                            required
+                        >
+                    </label>
+
+                    <label>
+                        <span>Légende (optionnel)</span>
+                        <input
+                            type="text"
+                            id="galerieCaption"
+                            placeholder="Un petit mot sur ce souvenir..."
+                        >
+                    </label>
+
+                    <button type="submit" class="primary-button" id="galerieSubmit">
+                        <i data-lucide="image-plus"></i>
+                        <span>Ajouter à la galerie</span>
+                    </button>
+
+                    <p class="galerie-status" id="galerieStatus"></p>
+
+                </form>
+
+                <div class="galerie-grid" id="galerieGrid">
+                    <p class="galerie-empty" id="galerieEmpty">
+                        Aucun souvenir ajouté pour l'instant.
+                    </p>
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ================= ACTIVITÉ ================= -->
+
+        <section class="activite-section section" id="activite">
+
+            <div class="activite-introduction reveal">
+
+                <p class="section-label">CE QUI SE PASSE</p>
+
+                <h2>
+                    Notre
+                    <em>activité.</em>
+                </h2>
+
+                <p>
+                    Tout ce que vous ajoutez ensemble, réuni ici.
+                </p>
+
+            </div>
+
+            <div class="activite-wrapper reveal">
+
+                <form class="activite-form" id="messageForm">
+
+                    <label>
+                        <span>Ton prénom</span>
+                        <input
+                            type="text"
+                            id="messageAuthor"
+                            class="author-name-input"
+                            placeholder="Ton prénom"
+                            required
+                        >
+                    </label>
+
+                    <label>
+                        <span>Petit mot</span>
+                        <textarea
+                            id="messageText"
+                            rows="2"
+                            placeholder="Laisse un petit mot..."
+                            required
+                        ></textarea>
+                    </label>
+
+                    <button type="submit" class="primary-button" id="messageSubmit">
+                        <i data-lucide="message-circle-heart"></i>
+                        <span>Publier ce mot</span>
+                    </button>
+
+                    <p class="activite-status" id="messageStatus"></p>
+
+                </form>
+
+                <div class="activite-feed" id="activiteFeed">
+                    <p class="activite-empty" id="activiteEmpty">
+                        Rien pour l'instant — soyez les premiers
+                        à ajouter quelque chose !
+                    </p>
+                </div>
+
+            </div>
+
+        </section>
+
+
         <!-- ================= FINAL ================= -->
 
         <section class="final-section">
@@ -470,12 +622,16 @@
     </footer>
 
 
-    <!-- Firebase (stockage partagé des rendez-vous) -->
+    <!-- Firebase (stockage partagé des rendez-vous, galerie, activité) -->
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-storage-compat.js"></script>
 
     <script src="firebase-config.js"></script>
+    <script src="identity.js"></script>
     <script src="rendezvous.js"></script>
+    <script src="gallery.js"></script>
+    <script src="activite.js"></script>
 
     <script src="script.js"></script>
 
