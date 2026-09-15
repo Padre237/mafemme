@@ -19,6 +19,21 @@ const activiteFeed =
 const activiteEmpty =
     document.getElementById("activiteEmpty");
 
+const activiteToday =
+    document.getElementById("activiteToday");
+
+const activiteCarousel =
+    document.getElementById("activiteCarousel");
+
+const activiteSeeAll =
+    document.getElementById("activiteSeeAll");
+
+const activiteModal =
+    document.getElementById("activiteModal");
+
+const activiteModalFeed =
+    document.getElementById("activiteModalFeed");
+
 
 /*
     PUBLICATION D'UN PETIT MOT
@@ -231,11 +246,64 @@ function renderActivite() {
 
     checkForNewContent(items, "activite", "activite");
 
-    activiteFeed.innerHTML = "";
+    renderActiviteCarousel(items);
+    renderActiviteList(activiteFeed, items.slice(0, 30), true);
+    renderActiviteList(activiteModalFeed, items.slice(0, 50), false);
+
+    if (window.lucide) {
+        lucide.createIcons();
+    }
+
+}
+
+
+/*
+    UNE LIGNE D'ACTIVITÉ (réutilisée dans le fil et la modale)
+*/
+
+function buildActiviteRow(item) {
+
+    const row =
+        document.createElement("div");
+
+    row.classList.add("activite-item");
+
+    row.innerHTML = `
+        <i data-lucide="${activiteIcons[item.type]}"></i>
+        <div class="activite-item-content">
+            <p>${item.html}</p>
+            <span>${timeAgo(item.createdAt)}</span>
+            ${renderReactionButton(item.collection, item.id, item.reactions)}
+        </div>
+    `;
+
+    bindReactionButton(
+        row.querySelector(".reaction-button")
+    );
+
+    return row;
+
+}
+
+
+/*
+    LISTE DES ACTIVITÉS, GROUPÉE PAR JOUR OU NON
+*/
+
+function renderActiviteList(container, items, grouped) {
+
+    if (!container) {
+        return;
+    }
+
+    container.innerHTML = "";
 
     if (items.length === 0) {
 
-        activiteFeed.appendChild(activiteEmpty);
+        const empty = activiteEmpty.cloneNode(true);
+        empty.removeAttribute("id");
+
+        container.appendChild(empty);
 
         return;
 
@@ -243,49 +311,88 @@ function renderActivite() {
 
     let currentGroup = null;
 
-    items.slice(0, 30).forEach(item => {
+    items.forEach(item => {
 
-        const groupLabel = dayGroupLabel(item.createdAt);
+        if (grouped) {
 
-        if (groupLabel !== currentGroup) {
+            const groupLabel = dayGroupLabel(item.createdAt);
 
-            currentGroup = groupLabel;
+            if (groupLabel !== currentGroup) {
 
-            const title =
-                document.createElement("p");
+                currentGroup = groupLabel;
 
-            title.classList.add("activite-group-title");
-            title.textContent = groupLabel;
+                const title =
+                    document.createElement("p");
 
-            activiteFeed.appendChild(title);
+                title.classList.add("activite-group-title");
+                title.textContent = groupLabel;
+
+                container.appendChild(title);
+
+            }
 
         }
 
-        const row =
-            document.createElement("div");
-
-        row.classList.add("activite-item");
-
-        row.innerHTML = `
-            <i data-lucide="${activiteIcons[item.type]}"></i>
-            <div class="activite-item-content">
-                <p>${item.html}</p>
-                <span>${timeAgo(item.createdAt)}</span>
-                ${renderReactionButton(item.collection, item.id, item.reactions)}
-            </div>
-        `;
-
-        bindReactionButton(
-            row.querySelector(".reaction-button")
-        );
-
-        activiteFeed.appendChild(row);
+        container.appendChild(buildActiviteRow(item));
 
     });
 
-    if (window.lucide) {
-        lucide.createIcons();
+}
+
+
+/*
+    CARROUSEL "AUJOURD'HUI"
+*/
+
+function renderActiviteCarousel(items) {
+
+    if (!activiteCarousel || !activiteToday) {
+        return;
     }
+
+    const todayItems =
+        items.filter(item => dayGroupLabel(item.createdAt) === "Aujourd'hui");
+
+    if (todayItems.length === 0) {
+
+        activiteToday.hidden = true;
+
+        return;
+
+    }
+
+    activiteToday.hidden = false;
+
+    activiteCarousel.innerHTML = "";
+
+    todayItems.forEach(item => {
+
+        const card =
+            document.createElement("button");
+
+        card.type = "button";
+        card.classList.add("activite-carousel-card");
+
+        card.innerHTML = `
+            <i data-lucide="${activiteIcons[item.type]}"></i>
+            <p>${item.html}</p>
+            <span>${timeAgo(item.createdAt)}</span>
+        `;
+
+        card.addEventListener("click", () => openModal(activiteModal));
+
+        activiteCarousel.appendChild(card);
+
+    });
+
+}
+
+if (activiteSeeAll) {
+
+    activiteSeeAll.addEventListener(
+        "click",
+        () => openModal(activiteModal)
+    );
 
 }
 

@@ -647,6 +647,20 @@
 
                 </div>
 
+                <div class="activite-today" id="activiteToday" hidden>
+
+                    <div class="activite-today-header">
+                        <h3>Aujourd'hui</h3>
+                        <button class="activite-see-all" id="activiteSeeAll" type="button">
+                            <span>Voir tout</span>
+                            <i data-lucide="arrow-right"></i>
+                        </button>
+                    </div>
+
+                    <div class="activite-carousel" id="activiteCarousel"></div>
+
+                </div>
+
                 <div class="activite-feed" id="activiteFeed">
                     <p class="activite-empty" id="activiteEmpty">
                         Rien pour l'instant — soyez les premiers
@@ -657,6 +671,29 @@
             </div>
 
         </section>
+
+
+        <!-- ================= MODALE TOUTE L'ACTIVITÉ ================= -->
+
+        <div class="form-modal" id="activiteModal">
+
+            <div class="form-modal-card activite-modal-card">
+
+                <button class="form-modal-close" aria-label="Fermer">
+                    <i data-lucide="x"></i>
+                </button>
+
+                <p class="form-modal-eyebrow">Tout l'historique</p>
+
+                <h3 class="form-modal-title">
+                    Les plus <em>récentes</em> d'abord
+                </h3>
+
+                <div class="activite-feed activite-modal-feed" id="activiteModalFeed"></div>
+
+            </div>
+
+        </div>
 
 
         <!-- ================= MODALE PETIT MOT ================= -->
@@ -776,6 +813,7 @@
     <script src="theme.js"></script>
     <script src="notifications.js"></script>
     <script src="reactions.js"></script>
+    <script src="engagement.js"></script>
     <script src="rendezvous.js"></script>
     <script src="gallery.js"></script>
     <script src="activite.js"></script>

@@ -269,7 +269,8 @@ galerieCollection
                             ? `<p>${escapeHtml(item.caption)}</p>`
                             : ""
                     }
-                    ${renderReactionButton("galerie", item.id, item.reactions)}
+                    ${renderEmojiBar("galerie", item.id, item.emojiReactions)}
+                    ${renderCommentsSection()}
                 </div>
 
                 <button
@@ -287,8 +288,14 @@ galerieCollection
                     () => deleteGalerieItem(item.id)
                 );
 
-            bindReactionButton(
-                card.querySelector(".reaction-button")
+            bindEmojiBar(
+                card.querySelector(".emoji-bar")
+            );
+
+            bindCommentsSection(
+                card.querySelector(".comments-section"),
+                "galerie",
+                item.id
             );
 
             galerieGrid.appendChild(card);

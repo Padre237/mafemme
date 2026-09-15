@@ -328,12 +328,13 @@ rendezvousCollection
                                     : "Je confirme 💕"
                             }
                         </button>
-                        ${renderReactionButton(
-                            "rendezvous",
-                            rendezvous.id,
-                            rendezvous.reactions
-                        )}
                     </div>
+                    ${renderEmojiBar(
+                        "rendezvous",
+                        rendezvous.id,
+                        rendezvous.emojiReactions
+                    )}
+                    ${renderCommentsSection()}
                 </div>
 
                 <button
@@ -361,8 +362,14 @@ rendezvousCollection
                     )
                 );
 
-            bindReactionButton(
-                card.querySelector(".reaction-button")
+            bindEmojiBar(
+                card.querySelector(".emoji-bar")
+            );
+
+            bindCommentsSection(
+                card.querySelector(".comments-section"),
+                "rendezvous",
+                rendezvous.id
             );
 
             rendezvousList.appendChild(card);
