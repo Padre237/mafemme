@@ -1,0 +1,31 @@
+// Règles de sécurité Firestore du projet "armelle-et-aaron".
+//
+// Copie de référence : les règles actives sont celles publiées dans
+// la console Firebase (Firestore Database > Règles). Après une
+// modification ici, recolle ce fichier dans la console et publie.
+//
+// Le site n'a pas de compte utilisateur : chaque collection listée
+// est ouverte en lecture et en écriture à qui a le lien du site.
+// Une nouvelle fonctionnalité qui utilise une nouvelle collection
+// doit l'ajouter dans la liste ci-dessous, sinon elle sera refusée.
+
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Collections utilisées par le site
+    match /{collection}/{docId} {
+      allow read, write: if collection in ['rendezvous', 'galerie', 'messages', 'settings', 'souhaits'];
+    }
+
+    // Commentaires sous les rendez-vous et les photos
+    match /{collection}/{docId}/comments/{commentId} {
+      allow read, write: if collection in ['rendezvous', 'galerie'];
+    }
+
+    // Notifications : lecture de tous les commentaires d'un coup
+    match /{path=**}/comments/{commentId} {
+      allow read: if true;
+    }
+  }
+}

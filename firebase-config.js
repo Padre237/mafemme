@@ -1,26 +1,22 @@
 /* =====================================================
    CONFIGURATION FIREBASE
 
-   Remplace les valeurs ci-dessous par celles de TON
-   projet Firebase (gratuit) :
+   Projet Firebase : "armelle-et-aaron"
+   (console : https://console.firebase.google.com/project/armelle-et-aaron)
 
-   1. Va sur https://console.firebase.google.com
-   2. Crée un projet (ex: "armelle-et-moi")
-   3. Dans le projet : "Créer une base de données" > Firestore
-      Database > commencer en "mode test"
-   4. Va dans Paramètres du projet (roue crantée) >
-      "Vos applications" > Ajouter une application Web (</>)
-   5. Copie l'objet "firebaseConfig" qui s'affiche et
-      colle ses valeurs ici en dessous.
+   Les règles de sécurité de la base sont recopiées dans le
+   fichier firestore.rules : toute nouvelle collection utilisée
+   par le site doit y être ajoutée, puis les règles publiées
+   dans la console (Firestore Database > Règles).
 ===================================================== */
 
 const firebaseConfig = {
-    apiKey: "AIzaSyBJiqk0uzeOWYeva3UI7oY0Netmmsa5WAk",
-    authDomain: "vinted-bf9de.firebaseapp.com",
-    projectId: "vinted-bf9de",
-    storageBucket: "vinted-bf9de.firebasestorage.app",
-    messagingSenderId: "5029279527",
-    appId: "1:5029279527:web:6bb463625fd86727611b02"
+    apiKey: "AIzaSyBv51M-3p-NOgfwCs6ryc8Zn0xAuhjFWSo",
+    authDomain: "armelle-et-aaron.firebaseapp.com",
+    projectId: "armelle-et-aaron",
+    storageBucket: "armelle-et-aaron.firebasestorage.app",
+    messagingSenderId: "243297911311",
+    appId: "1:243297911311:web:16847283757a2788e1d97a"
 };
 
 firebase.initializeApp(firebaseConfig);
