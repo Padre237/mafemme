@@ -108,8 +108,17 @@ function applyBirthdayMode(mode) {
 
     if (mode === "party") {
 
-        // Laisse la page apparaître avant de lancer la fête.
-        setTimeout(launchBirthdayConfetti, isFirstRender ? 900 : 0);
+        // Laisse la page apparaître avant de lancer la fête ; si
+        // l'animation d'ouverture (intro.js) joue, on attend sa fin.
+        setTimeout(() => {
+
+            if (document.body.classList.contains("intro-active")) {
+                document.addEventListener("intro:done", launchBirthdayConfetti, { once: true });
+            } else {
+                launchBirthdayConfetti();
+            }
+
+        }, isFirstRender ? 900 : 0);
 
     }
 
@@ -130,30 +139,99 @@ function startOfDay(date) {
     return new Date(date.getFullYear(), date.getMonth(), date.getDate());
 }
 
-function updateBirthdayCountdown(now) {
+function birthdayCountdownParts(now) {
 
     const diff = Math.max(0, BIRTHDAY_START - now);
     const totalSeconds = Math.floor(diff / 1000);
 
-    const days = Math.floor(totalSeconds / 86400);
-    const hours = Math.floor((totalSeconds % 86400) / 3600);
-    const minutes = Math.floor((totalSeconds % 3600) / 60);
-    const seconds = totalSeconds % 60;
+    return {
+        days: Math.floor(totalSeconds / 86400),
+        hours: Math.floor((totalSeconds % 86400) / 3600),
+        minutes: Math.floor((totalSeconds % 3600) / 60),
+        seconds: totalSeconds % 60
+    };
 
-    birthdayDays.textContent = days;
-    birthdayHours.textContent = String(hours).padStart(2, "0");
-    birthdayMinutes.textContent = String(minutes).padStart(2, "0");
-    birthdaySeconds.textContent = String(seconds).padStart(2, "0");
+}
 
-    // "J-n" en jours de calendrier (et non en tranches de 24 h).
-    const calendarDays = Math.round(
+function writeBirthdayCountdown(parts) {
+
+    birthdayDays.textContent = parts.days;
+    birthdayHours.textContent = String(parts.hours).padStart(2, "0");
+    birthdayMinutes.textContent = String(parts.minutes).padStart(2, "0");
+    birthdaySeconds.textContent = String(parts.seconds).padStart(2, "0");
+
+}
+
+// "J-n" en jours de calendrier (et non en tranches de 24 h).
+function birthdayCalendarDaysLeft(now) {
+
+    return Math.round(
         (startOfDay(BIRTHDAY_START) - startOfDay(now)) / DAY_MS
     );
 
-    birthdayEyebrow.textContent =
-        calendarDays <= 1
-            ? "C'EST DEMAIN · 8 DÉCEMBRE"
-            : `J-${calendarDays} · 8 DÉCEMBRE`;
+}
+
+function birthdayCountdownLabel(now) {
+
+    const calendarDays = birthdayCalendarDaysLeft(now);
+
+    return calendarDays <= 1
+        ? "C'EST DEMAIN · 8 DÉCEMBRE"
+        : `J-${calendarDays} · 8 DÉCEMBRE`;
+
+}
+
+function updateBirthdayCountdown(now) {
+
+    writeBirthdayCountdown(birthdayCountdownParts(now));
+
+    birthdayEyebrow.textContent = birthdayCountdownLabel(now);
+
+}
+
+
+/*
+    DÉFILEMENT DES CHIFFRES (appelé par intro.js quand le site
+    apparaît) : chaque case monte de 0 jusqu'à sa vraie valeur,
+    comme un compteur.
+*/
+
+let birthdayRolling = false;
+
+function rollBirthdayCountdown(duration = 1500) {
+
+    if (currentBirthdayMode !== "countdown") {
+        return;
+    }
+
+    birthdayRolling = true;
+
+    const start = performance.now();
+
+    function frame(time) {
+
+        const progress = Math.min(1, (time - start) / duration);
+        const eased = 1 - Math.pow(1 - progress, 3);
+
+        const target = birthdayCountdownParts(birthdayNow());
+
+        writeBirthdayCountdown({
+            days: Math.round(target.days * eased),
+            hours: Math.round(target.hours * eased),
+            minutes: Math.round(target.minutes * eased),
+            seconds: Math.round(target.seconds * eased)
+        });
+
+        if (progress < 1) {
+            requestAnimationFrame(frame);
+        } else {
+            birthdayRolling = false;
+            updateBirthdayCountdown(birthdayNow());
+        }
+
+    }
+
+    requestAnimationFrame(frame);
 
 }
 
@@ -172,7 +250,7 @@ function birthdayTick() {
 
     applyBirthdayMode(mode);
 
-    if (mode === "countdown") {
+    if (mode === "countdown" && !birthdayRolling) {
         updateBirthdayCountdown(now);
     }
 
