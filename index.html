@@ -52,6 +52,7 @@
             <a href="#histoire">Notre histoire</a>
             <a href="#compteur">Notre temps</a>
             <a href="#lettre">Ma lettre</a>
+            <a href="#souhaits">Souhaits</a>
             <a href="#rendezvous">Rendez-vous</a>
             <a href="#galerie">Galerie</a>
             <a href="#activite">Activité</a>
@@ -96,34 +97,139 @@
 
             <div class="hero-content">
 
-                <p class="eyebrow">
-                    <span></span>
-                    MA REINE
-                    <span></span>
-                </p>
+                <!--
+                    Trois versions de l'accueil, une seule visible à la fois
+                    (choisie par anniversaire.js selon la date) :
+                    compte à rebours jusqu'au 8 décembre, puis "Joyeux
+                    anniversaire" toute la journée, puis l'accueil habituel.
+                -->
 
-                <h1>
-                    I Love You
-                    <em>My Girl.</em>
-                </h1>
+                <div class="hero-mode" id="heroModeDefault">
 
-                <p class="hero-description">
-                    Chaque jour sans toi semble un peu plus long.
-                    Même quand tu es loin, tu occupes toujours
-                    une place immense dans mes pensées.
-                </p>
+                    <p class="eyebrow">
+                        <span></span>
+                        MA REINE
+                        <span></span>
+                    </p>
 
-                <div class="hero-actions">
+                    <h1>
+                        I Love You
+                        <em>My Girl.</em>
+                    </h1>
 
-                    <button class="primary-button" id="openLetterHero">
-                        <i data-lucide="mail-open"></i>
-                        <span>Lire ma lettre</span>
-                    </button>
+                    <p class="hero-description">
+                        Chaque jour sans toi semble un peu plus long.
+                        Même quand tu es loin, tu occupes toujours
+                        une place immense dans mes pensées.
+                    </p>
 
-                    <a href="#compteur" class="secondary-button">
-                        Notre histoire
-                        <i data-lucide="arrow-down"></i>
-                    </a>
+                    <div class="hero-actions">
+
+                        <button class="primary-button" id="openLetterHero">
+                            <i data-lucide="mail-open"></i>
+                            <span>Lire ma lettre</span>
+                        </button>
+
+                        <a href="#compteur" class="secondary-button">
+                            Notre histoire
+                            <i data-lucide="arrow-down"></i>
+                        </a>
+
+                    </div>
+
+                </div>
+
+                <div class="hero-mode" id="heroModeCountdown" hidden>
+
+                    <p class="eyebrow">
+                        <span></span>
+                        <b id="birthdayEyebrow">8 DÉCEMBRE</b>
+                        <span></span>
+                    </p>
+
+                    <h1>
+                        Bientôt
+                        <em>ton jour.</em>
+                    </h1>
+
+                    <div class="birthday-countdown" aria-live="off">
+
+                        <div>
+                            <strong id="birthdayDays">0</strong>
+                            <span>Jours</span>
+                        </div>
+
+                        <div>
+                            <strong id="birthdayHours">00</strong>
+                            <span>Heures</span>
+                        </div>
+
+                        <div>
+                            <strong id="birthdayMinutes">00</strong>
+                            <span>Min</span>
+                        </div>
+
+                        <div>
+                            <strong id="birthdaySeconds">00</strong>
+                            <span>Sec</span>
+                        </div>
+
+                    </div>
+
+                    <p class="hero-description">
+                        Le 8 décembre, c'est toi qu'on fête.
+                        En attendant, je compte chaque seconde…
+                        et toi, dis-moi ce qui te ferait plaisir.
+                    </p>
+
+                    <div class="hero-actions">
+
+                        <a href="#souhaits" class="primary-button">
+                            <i data-lucide="gift"></i>
+                            <span>Écris ta liste de souhaits</span>
+                        </a>
+
+                        <a href="#lettre" class="secondary-button js-open-letter">
+                            <i data-lucide="mail-open"></i>
+                            Lire ma lettre
+                        </a>
+
+                    </div>
+
+                </div>
+
+                <div class="hero-mode" id="heroModeParty" hidden>
+
+                    <p class="eyebrow">
+                        <span></span>
+                        8 DÉCEMBRE · C'EST TON JOUR
+                        <span></span>
+                    </p>
+
+                    <h1 class="hero-title-party" id="birthdayPartyTitle">
+                        Joyeux
+                        <em>anniversaire.</em>
+                    </h1>
+
+                    <p class="hero-description">
+                        Aujourd'hui, c'est toi qu'on fête, Armelle Jessica.
+                        Je te souhaite tout le bonheur que tu mérites,
+                        et bien plus encore. Joyeux anniversaire, mon amour.
+                    </p>
+
+                    <div class="hero-actions">
+
+                        <a href="#lettre" class="primary-button js-open-letter">
+                            <i data-lucide="mail-open"></i>
+                            <span>Lire ma lettre</span>
+                        </a>
+
+                        <a href="#souhaits" class="secondary-button">
+                            <i data-lucide="gift"></i>
+                            Ta liste de souhaits
+                        </a>
+
+                    </div>
 
                 </div>
 
@@ -356,6 +462,158 @@
             </div>
 
         </section>
+
+
+        <!-- ================= LISTE DE SOUHAITS ================= -->
+
+        <section class="souhaits-section section" id="souhaits">
+
+            <div class="souhaits-introduction reveal">
+
+                <p class="section-label">TES ENVIES</p>
+
+                <h2>
+                    Ta liste
+                    <em>de souhaits.</em>
+                </h2>
+
+                <p>
+                    Écris ici tout ce qui te ferait plaisir, et dis-moi
+                    à quel point tu en as envie. Je lis tout, promis.
+                </p>
+
+            </div>
+
+            <div class="souhaits-wrapper reveal">
+
+                <div class="section-actions">
+
+                    <button type="button" class="open-form-button" id="souhaitAddButton">
+                        <i data-lucide="gift"></i>
+                        <span>Ajouter un souhait</span>
+                    </button>
+
+                </div>
+
+                <div class="souhaits-list" id="souhaitsList">
+                    <p class="souhaits-empty" id="souhaitsEmpty">
+                        Ta liste est encore vide — ajoute ton premier souhait !
+                    </p>
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ================= MODALE SOUHAIT ================= -->
+
+        <div class="form-modal" id="souhaitModal">
+
+            <div class="form-modal-card">
+
+                <button class="form-modal-close" aria-label="Fermer">
+                    <i data-lucide="x"></i>
+                </button>
+
+                <p class="form-modal-eyebrow" id="souhaitModalEyebrow">Une envie de plus</p>
+
+                <h3 class="form-modal-title">
+                    <span id="souhaitModalVerb">Ajoute</span>
+                    <em id="souhaitModalObject">un souhait</em>
+                </h3>
+
+                <form class="rendezvous-form souhait-form" id="souhaitForm">
+
+                    <label>
+                        <span>Ton prénom</span>
+                        <input
+                            type="text"
+                            id="souhaitAuthor"
+                            class="author-name-input"
+                            placeholder="Ton prénom"
+                            required
+                        >
+                    </label>
+
+                    <label>
+                        <span>Ton souhait</span>
+                        <input
+                            type="text"
+                            id="souhaitTitle"
+                            maxlength="120"
+                            placeholder="Un parfum, un livre, un week-end à deux..."
+                            required
+                        >
+                    </label>
+
+                    <fieldset class="souhait-priority">
+
+                        <legend>À quel point en as-tu envie ?</legend>
+
+                        <div class="souhait-priority-options">
+
+                            <label class="souhait-priority-option">
+                                <input type="radio" name="souhaitPriority" value="1">
+                                <span class="souhait-priority-pill">
+                                    <span class="priority-hearts"><i data-lucide="heart"></i><i data-lucide="heart"></i><i data-lucide="heart"></i></span>
+                                    Indispensable
+                                </span>
+                            </label>
+
+                            <label class="souhait-priority-option">
+                                <input type="radio" name="souhaitPriority" value="2" checked>
+                                <span class="souhait-priority-pill">
+                                    <span class="priority-hearts"><i data-lucide="heart"></i><i data-lucide="heart"></i></span>
+                                    J'aimerais beaucoup
+                                </span>
+                            </label>
+
+                            <label class="souhait-priority-option">
+                                <input type="radio" name="souhaitPriority" value="3">
+                                <span class="souhait-priority-pill">
+                                    <span class="priority-hearts"><i data-lucide="heart"></i></span>
+                                    Si possible
+                                </span>
+                            </label>
+
+                        </div>
+
+                    </fieldset>
+
+                    <label>
+                        <span>Lien (optionnel)</span>
+                        <input
+                            type="text"
+                            id="souhaitLink"
+                            inputmode="url"
+                            autocomplete="off"
+                            placeholder="Colle ici le lien vers l'article"
+                        >
+                    </label>
+
+                    <label>
+                        <span>Petit mot (optionnel)</span>
+                        <textarea
+                            id="souhaitNote"
+                            rows="3"
+                            maxlength="500"
+                            placeholder="Taille, couleur, ou pourquoi ça te ferait plaisir..."
+                        ></textarea>
+                    </label>
+
+                    <button type="submit" class="primary-button" id="souhaitSubmit">
+                        <i data-lucide="gift"></i>
+                        <span id="souhaitSubmitLabel">Ajouter à ma liste</span>
+                    </button>
+
+                    <p class="rendezvous-status" id="souhaitStatus"></p>
+
+                </form>
+
+            </div>
+
+        </div>
 
 
         <!-- ================= RENDEZ-VOUS ================= -->
@@ -733,6 +991,7 @@
                     <button type="button" class="filter-pill active" data-filter="all">Tout</button>
                     <button type="button" class="filter-pill" data-filter="rendezvous">Rendez-vous</button>
                     <button type="button" class="filter-pill" data-filter="galerie">Galerie</button>
+                    <button type="button" class="filter-pill" data-filter="souhait">Souhaits</button>
                     <button type="button" class="filter-pill" data-filter="message">Petits mots</button>
                 </div>
 
@@ -902,10 +1161,12 @@
     <script src="identity.js"></script>
     <script src="modals.js"></script>
     <script src="theme.js"></script>
+    <script src="anniversaire.js"></script>
     <script src="notifications.js"></script>
     <script src="reactions.js"></script>
     <script src="engagement.js"></script>
     <script src="rendezvous.js"></script>
+    <script src="souhaits.js"></script>
     <script src="background-images.js"></script>
     <script src="image-editor.js"></script>
     <script src="gallery-lock.js"></script>

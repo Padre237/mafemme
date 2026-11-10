@@ -60,8 +60,11 @@ function updateNotifToggleUI() {
 
     notifPermissionToggle.classList.toggle("active", active);
 
-    notifPermissionToggle.querySelector("i")
-        .setAttribute("data-lucide", active ? "bell" : "bell-off");
+    // L'icône est recréée à chaque fois : une fois dessinée par
+    // Lucide, la balise <i> d'origine n'existe plus (remplacée
+    // par un <svg>), et la chercher faisait planter ce fichier.
+    notifPermissionToggle.innerHTML =
+        `<i data-lucide="${active ? "bell" : "bell-off"}"></i>`;
 
     if (window.lucide) {
         lucide.createIcons();
@@ -263,6 +266,23 @@ watchCollectionForNotifications(galerieCollection, {
         );
 
     }
+
+});
+
+
+watchCollectionForNotifications(souhaitsCollection, {
+
+    onNewEntry: (souhait) => {
+
+        fireNotification(
+            "🎁 Nouveau souhait",
+            `${souhait.author || "Quelqu'un"} a ajouté « ${souhait.title} » à sa liste`
+        );
+
+    },
+
+    // Les souhaits n'ont pas de réactions emoji.
+    onNewReaction: () => {}
 
 });
 

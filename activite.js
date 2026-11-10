@@ -185,19 +185,21 @@ function dayGroupLabel(date) {
 
 
 /*
-    FUSION DES TROIS SOURCES D'ACTIVITÉ
-    (rendez-vous, galerie, petits mots)
+    FUSION DES SOURCES D'ACTIVITÉ
+    (rendez-vous, galerie, souhaits, petits mots)
 */
 
 const activiteState = {
     rendezvous: [],
     galerie: [],
+    souhaits: [],
     messages: []
 };
 
 const activiteIcons = {
     rendezvous: "calendar-heart",
     galerie: "image",
+    souhait: "gift",
     message: "message-circle-heart"
 };
 
@@ -247,6 +249,18 @@ function renderActivite() {
                         ? ` : "${escapeHtml(item.caption)}"`
                         : ""
                 )
+        })),
+
+        ...activiteState.souhaits.map(souhait => ({
+            type: "souhait",
+            collection: "souhaits",
+            id: souhait.id,
+            createdAt: souhait.createdAt,
+            reactions: souhait.reactions,
+            html:
+                `${escapeHtml(souhait.author) || "Quelqu'un"} a ajouté ` +
+                `un souhait : "${escapeHtml(souhait.title)}" ` +
+                `(${escapeHtml(souhaitPriorityLabel(souhait.priority))})`
         })),
 
         ...activiteState.messages.map(message => ({
@@ -518,6 +532,19 @@ rendezvousCollection.onSnapshot(snapshot => {
 galerieCollection.onSnapshot(snapshot => {
 
     activiteState.galerie =
+        snapshot.docs.map(doc => ({
+            id: doc.id,
+            ...doc.data(),
+            createdAt: toJsDate(doc.data().createdAt)
+        }));
+
+    renderActivite();
+
+});
+
+souhaitsCollection.onSnapshot(snapshot => {
+
+    activiteState.souhaits =
         snapshot.docs.map(doc => ({
             id: doc.id,
             ...doc.data(),

@@ -472,6 +472,117 @@ img {
 
 
 /* =====================================================
+   HERO : COMPTE À REBOURS ET JOUR J DE L'ANNIVERSAIRE
+===================================================== */
+
+.eyebrow b {
+    font-weight: inherit;
+}
+
+.birthday-countdown {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+
+    max-width: 480px;
+
+    margin-top: 34px;
+}
+
+.birthday-countdown div {
+    padding: 16px 4px 14px;
+
+    text-align: center;
+
+    background: rgba(255,255,255,.07);
+
+    border: 1px solid rgba(255,255,255,.14);
+    border-radius: 8px;
+
+    backdrop-filter: blur(6px);
+}
+
+.birthday-countdown strong {
+    display: block;
+
+    font-family: var(--serif);
+    font-size: clamp(30px, 8.5vw, 48px);
+    font-weight: 500;
+    font-variant-numeric: tabular-nums;
+    line-height: 1;
+}
+
+.birthday-countdown span {
+    display: block;
+
+    margin-top: 8px;
+
+    color: rgba(255,255,255,.6);
+
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+}
+
+.hero .hero-title-party {
+    font-size: clamp(42px, 13vw, 128px);
+    letter-spacing: -3px;
+
+    cursor: inherit;
+}
+
+.birthday-confetti {
+    position: fixed;
+    z-index: 2500;
+    inset: 0;
+
+    overflow: hidden;
+
+    pointer-events: none;
+}
+
+.birthday-confetti-piece {
+    position: absolute;
+    top: -40px;
+
+    animation-name: birthdayConfettiFall;
+    animation-timing-function: cubic-bezier(.3,.1,.6,1);
+    animation-fill-mode: both;
+
+    will-change: transform;
+}
+
+.birthday-confetti-piece.is-paper {
+    width: 8px;
+    height: 14px;
+
+    border-radius: 2px;
+}
+
+.birthday-confetti-piece.is-emoji {
+    line-height: 1;
+}
+
+@keyframes birthdayConfettiFall {
+
+    0% {
+        opacity: 1;
+        transform: translate3d(0, 0, 0) rotate(0deg);
+    }
+
+    85% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0;
+        transform: translate3d(var(--drift), 110vh, 0) rotate(var(--rot));
+    }
+
+}
+
+
+/* =====================================================
    SECTIONS
 ===================================================== */
 
@@ -1619,6 +1730,352 @@ body.modal-open {
     font-family: var(--serif);
     font-style: italic;
     font-size: 15px;
+}
+
+
+/* =====================================================
+   LISTE DE SOUHAITS
+===================================================== */
+
+.souhaits-section {
+    background: var(--cream);
+}
+
+.souhaits-introduction {
+    max-width: 650px;
+    margin: 0 auto 45px;
+
+    text-align: center;
+}
+
+.souhaits-introduction .section-label {
+    justify-content: center;
+}
+
+.souhaits-introduction h2 {
+    margin-bottom: 20px;
+
+    font-family: var(--serif);
+    font-size: clamp(40px, 10vw, 64px);
+    font-weight: 400;
+    line-height: .95;
+}
+
+.souhaits-introduction h2 em {
+    color: var(--burgundy-light);
+    font-family: var(--script);
+    font-weight: 400;
+}
+
+.souhaits-introduction > p:last-child {
+    color: var(--text-light);
+
+    font-family: var(--serif);
+    font-size: 18px;
+    line-height: 1.5;
+}
+
+.souhaits-wrapper {
+    max-width: 560px;
+    margin: 0 auto;
+}
+
+.souhaits-empty {
+    padding: 20px;
+
+    color: var(--text-light);
+
+    font-family: var(--serif);
+    font-style: italic;
+    text-align: center;
+}
+
+.souhaits-group + .souhaits-group {
+    margin-top: 34px;
+}
+
+.souhaits-group-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    margin-bottom: 14px;
+
+    color: var(--burgundy);
+
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+}
+
+.souhaits-group-count {
+    display: grid;
+    place-items: center;
+
+    min-width: 22px;
+    height: 22px;
+
+    padding: 0 6px;
+
+    color: var(--text-light);
+    background: var(--cream-dark);
+
+    border-radius: 100px;
+
+    font-size: 11px;
+    letter-spacing: 0;
+}
+
+.priority-hearts {
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
+
+    color: var(--burgundy-light);
+}
+
+.priority-hearts svg {
+    width: 13px;
+    height: 13px;
+
+    fill: currentColor;
+}
+
+.souhait-card {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 14px;
+
+    padding: 18px 20px;
+
+    background: var(--white);
+
+    border-left: 3px solid var(--cream-dark);
+    border-radius: 8px;
+
+    box-shadow: 0 10px 25px rgba(57,22,28,.08);
+}
+
+.souhait-card + .souhait-card {
+    margin-top: 12px;
+}
+
+.souhait-card.priority-1 {
+    border-left-color: var(--burgundy-light);
+}
+
+.souhait-card.priority-2 {
+    border-left-color: var(--rose);
+}
+
+.souhait-card-info {
+    min-width: 0;
+}
+
+.souhait-card-info strong {
+    display: block;
+
+    color: var(--burgundy);
+
+    font-family: var(--serif);
+    font-size: 20px;
+    font-weight: 600;
+    line-height: 1.2;
+
+    overflow-wrap: anywhere;
+}
+
+.souhait-card-info p {
+    margin-top: 6px;
+
+    color: var(--text);
+
+    font-family: var(--serif);
+    font-size: 15px;
+    line-height: 1.45;
+
+    white-space: pre-line;
+    overflow-wrap: anywhere;
+}
+
+.souhait-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+
+    margin-top: 12px;
+    padding: 6px 13px;
+
+    color: var(--burgundy-light);
+
+    border: 1px solid rgba(196,63,94,.35);
+    border-radius: 100px;
+
+    font-size: 12px;
+
+    transition: var(--transition);
+}
+
+.souhait-link:hover {
+    color: white;
+    background: var(--burgundy-light);
+}
+
+.souhait-link svg {
+    width: 13px;
+}
+
+.souhait-author {
+    display: block;
+
+    margin-top: 10px;
+
+    color: var(--text-light);
+
+    font-family: var(--serif);
+    font-size: 13px;
+    font-style: italic;
+}
+
+.souhait-card-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+
+    flex-shrink: 0;
+}
+
+.souhait-card-actions button {
+    display: grid;
+    place-items: center;
+
+    width: 34px;
+    height: 34px;
+
+    color: var(--text-light);
+    background: var(--cream);
+
+    border-radius: 50%;
+
+    transition: var(--transition);
+}
+
+.souhait-card-actions svg {
+    width: 15px;
+}
+
+.souhait-edit:hover {
+    color: white;
+    background: var(--burgundy-light);
+}
+
+.souhait-delete:hover {
+    color: white;
+    background: #b3261e;
+}
+
+
+/* Choix de la priorité dans le formulaire */
+
+.souhait-priority {
+    min-width: 0;
+
+    margin: 0;
+    padding: 0;
+
+    border: none;
+}
+
+.souhait-priority legend {
+    margin-bottom: 10px;
+    padding: 0;
+
+    color: var(--text-light);
+
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 14px;
+}
+
+.souhait-priority-options {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.rendezvous-form .souhait-priority-option {
+    position: relative;
+
+    display: block;
+
+    font-family: var(--sans);
+    font-style: normal;
+}
+
+.rendezvous-form .souhait-priority-option input {
+    position: absolute;
+
+    width: 1px;
+    height: 1px;
+
+    padding: 0;
+
+    opacity: 0;
+    pointer-events: none;
+}
+
+.souhait-priority-pill {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    padding: 11px 18px;
+
+    color: var(--text);
+
+    border: 1px solid rgba(103,21,37,.2);
+    border-radius: 100px;
+
+    font-size: 14px;
+
+    transition: var(--transition);
+}
+
+.souhait-priority-pill .priority-hearts {
+    min-width: 43px;
+}
+
+.souhait-priority-option:hover .souhait-priority-pill {
+    border-color: var(--burgundy-light);
+}
+
+.souhait-priority-option input:checked + .souhait-priority-pill {
+    color: white;
+    background: var(--burgundy-light);
+    border-color: var(--burgundy-light);
+}
+
+.souhait-priority-option input:checked + .souhait-priority-pill .priority-hearts {
+    color: white;
+}
+
+.souhait-priority-option input:focus-visible + .souhait-priority-pill {
+    outline: 2px solid var(--burgundy-light);
+    outline-offset: 2px;
+}
+
+
+/* Mode nuit : le bordeaux foncé ne se lit pas sur fond sombre */
+
+:root[data-theme="night"] .souhait-card-info strong,
+:root[data-theme="night"] .souhaits-group-title {
+    color: var(--rose);
+}
+
+:root[data-theme="night"] .souhait-priority-pill {
+    border-color: rgba(255,255,255,.18);
 }
 
 
@@ -3492,6 +3949,22 @@ footer p {
 
     .final-section {
         padding: 160px 20px;
+    }
+
+}
+
+/* =====================================================
+   GRAND ÉCRAN : MENU SUR UNE SEULE LIGNE
+
+   Centré avec left: 50%, le menu ne dispose que de la moitié
+   droite de l'écran pour calculer sa largeur : avec 8 liens,
+   ils passaient sur deux lignes alors que la place existe.
+===================================================== */
+
+@media (min-width: 1280px) {
+
+    .navigation {
+        width: max-content;
     }
 
 }
