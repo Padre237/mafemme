@@ -260,7 +260,13 @@ function renderActivite() {
             html:
                 `${escapeHtml(souhait.author) || "Quelqu'un"} a ajouté ` +
                 `un souhait : "${escapeHtml(souhait.title)}" ` +
-                `(${escapeHtml(souhaitPriorityLabel(souhait.priority))})`
+                `(${escapeHtml(souhaitPriorityLabel(souhait.priority))})` +
+                (
+                    souhaitPhotos(souhait).length
+                        ? ` · ${souhaitPhotos(souhait).length} photo` +
+                          (souhaitPhotos(souhait).length > 1 ? "s" : "")
+                        : ""
+                )
         })),
 
         ...activiteState.messages.map(message => ({
